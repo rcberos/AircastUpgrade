@@ -88,7 +88,7 @@ function download(CampaignID, CampaignFile, cb){
         console.log('error ' + CampaignID)
         file.close()
         // console.log(err.message)
-    	cb('error');
+    	// cb('error');
         // return cb(err.message);
     });
 
