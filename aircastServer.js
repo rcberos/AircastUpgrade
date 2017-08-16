@@ -104,6 +104,7 @@ function download(CampaignID, CampaignFile, cb){
     });
 
     file.on('error', function(err) { // Handle errors
+    	console.log(JSON.stringify(err));
     	console.log('file error');
     	cb('error');
     });
