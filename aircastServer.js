@@ -62,7 +62,7 @@ function update(CampaignID){
 function download(CampaignID, CampaignFile, cb){
 	console.log('Downloading CampaignID: '+CampaignID+' FileID: '+CampaignFile.FileID);
 
-	var dest = '/Users/randyberos/Documents/nodejs/AircastDevice/'+CampaignFile.FileName;
+	var dest = path.join(__dirname+'/Aircast/'+CampaignFile.FileName);
 	var source = 'http://s3-ap-southeast-1.amazonaws.com/rpitv/Aircast/'+CampaignFile.FileName;
 
 	var file = fs.createWriteStream(dest);
@@ -89,7 +89,7 @@ function download(CampaignID, CampaignFile, cb){
         console.log('error ' + CampaignID)
         file.close()
         console.log(err.message)
-    	// cb('error');
+    	cb('error');
         // return cb(err.message);
     });
 
