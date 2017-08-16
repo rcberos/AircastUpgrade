@@ -160,6 +160,7 @@ var getRpiFiles = function(){
 					// console.log(index);
 					download(d.CampaignID, file, callback);
 				}, function(err){
+					console.log(err);
 					if(!err){
 						console.log('CampaignID: '+d.CampaignID+' FULL DOWNLOADED');
 						update(d.CampaignID);
