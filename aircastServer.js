@@ -71,6 +71,7 @@ function download(CampaignID, CampaignFile, cb){
     // verify response code
     sendReq.on('response', function(response) {
         if (response.statusCode !== 200) {
+        	console.log('may mali');
             return cb('Response status was ' + response.statusCode);
         }
     });
