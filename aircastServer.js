@@ -131,7 +131,7 @@ var getRpiFiles = function(){
 	request(options, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
 	  	// console.log(JSON.stringify(body));
-	  	// console.log('get files success');
+	  	console.log('get files success');
 		var data = body.value;
 		for(var i = 0; i < data.length; i++){
 			var isDownloading = false;
