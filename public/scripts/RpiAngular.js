@@ -154,20 +154,22 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
           $scope.$apply();
         }
         // console.log($scope.templates);
-        $timeout(function(){$scope.getTemplates();}, 5000);
+        // $timeout(function(){$scope.getTemplates();}, 5000);
       }, function(err){
         console.log(err);
-        $timeout(function(){$scope.getTemplates();}, 5000);
+        // $timeout(function(){$scope.getTemplates();}, 5000);
       });
 
     }, function(error){
-      $timeout(function(){$scope.getTemplates();}, 5000);
+      // $timeout(function(){$scope.getTemplates();}, 5000);
     });
 
       
   }
 
-  $scope.getTemplates();
+
+  $timeout(function(){$scope.getTemplates();}, 10000);
+  // $scope.getTemplates();
 
 
 });
