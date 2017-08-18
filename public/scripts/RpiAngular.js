@@ -67,7 +67,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
     
 
-    // UpdateWallet($http, playingTemplate.CampaignID);
+    UpdateWallet($http, playingTemplate.CampaignID);
 
 
     $scope.currentTemp = playingTemplate.tempHtml;
