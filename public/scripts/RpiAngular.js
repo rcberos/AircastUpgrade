@@ -169,7 +169,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   }
 
 
-  $timeout(function(){$scope.getTemplates();}, 10000);
+  $interval(function(){$scope.getTemplates();}, 10000);
   // $scope.getTemplates();
 
 
