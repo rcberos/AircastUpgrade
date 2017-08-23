@@ -96,6 +96,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
 
   $scope.getTemplates = function(){
+    console.log('getTemplates');
     $http.get('/myID').then(function(response){
       // console.log('default');
       // console.log(response.data);
