@@ -151,7 +151,7 @@ var getRpiFiles = function(){
 				}
 				RpiConfig.RpiDownloading.push(campaign);
 			}
-			console.log(JSON.stringify(RpiConfig.RpiDownloading));
+			// console.log(JSON.stringify(RpiConfig.RpiDownloading));
 		}
 
 		RpiConfig.RpiDownloading.forEach(function(d, index){
