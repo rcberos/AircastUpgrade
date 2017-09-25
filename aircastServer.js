@@ -10,7 +10,8 @@ var RpiConfig = {
 	CheckFile: "",
 	UpdateFile: "",
 	RpiDownloading: [],
-	isLegit: false
+	isLegit: false,
+	mayDownload: false
 }
 
 // var configLocation = '/Users/randyberos/Documents/nodejs/AircastConfig/config.json';
@@ -154,29 +155,69 @@ var getRpiFiles = function(){
 			// console.log(JSON.stringify(RpiConfig.RpiDownloading));
 		}
 
-		RpiConfig.RpiDownloading.forEach(function(d, index){
-			if(d.isDownloading == false){
-				// console.log('New File to Download: '+d.CampaignID);
-				d.isDownloading = true;
-				async.each(d.Files, function(file, callback) {
-					// console.log(index);
-					download(d.CampaignID, file, callback);
-				}, function(err){
-					console.log(err);
-					if(!err){
-						console.log('CampaignID: '+d.CampaignID+' FULL DOWNLOADED');
-						update(d.CampaignID);
 
-					}
-					else{
-						console.log('FileFailed');
-						d.isDownloading = false;
 
-					}
-				})
-			}
+		if(!RpiConfig.mayDownload && RpiConfig.RpiDownloading.length > 0){
+			RpiConfig.mayDownload = true;
 
-		})
+			async.eachSeries(RpiConfig.RpiDownloading, function(d, callback) {
+
+				if(d.isDownloading == false){
+					d.isDownloading = true;
+					async.eachSeries(d.Files, function(file, callback) {
+						// console.log(index);
+						download(d.CampaignID, file, callback);
+					}, function(err){
+						console.log(err);
+						if(!err){
+							console.log('CampaignID: '+d.CampaignID+' FULL DOWNLOADED');
+							update(d.CampaignID);
+
+						}
+						else{
+							console.log('FileFailed');
+							d.isDownloading = false;
+						}
+						callback();
+					})
+				}
+
+			  // callback();
+			}, function(err){
+			    if( err ) {
+			      console.log('A file failed to process');
+			    } else {
+			      console.log('All files have been processed successfully');
+			    }
+			    RpiConfig.mayDownload = false;
+			});
+			// console.log('CampaignID: '+d.CampaignID+' FULL DOWNLOADED');
+		}
+
+
+		// RpiConfig.RpiDownloading.forEach(function(d, index){
+		// 	if(d.isDownloading == false){
+		// 		// console.log('New File to Download: '+d.CampaignID);
+		// 		d.isDownloading = true;
+		// 		async.each(d.Files, function(file, callback) {
+		// 			// console.log(index);
+		// 			download(d.CampaignID, file, callback);
+		// 		}, function(err){
+		// 			console.log(err);
+		// 			if(!err){
+		// 				console.log('CampaignID: '+d.CampaignID+' FULL DOWNLOADED');
+		// 				update(d.CampaignID);
+
+		// 			}
+		// 			else{
+		// 				console.log('FileFailed');
+		// 				d.isDownloading = false;
+
+		// 			}
+		// 		})
+		// 	}
+
+		// })
 	  }
 	  else{
 	  	console.log('connection failed');
