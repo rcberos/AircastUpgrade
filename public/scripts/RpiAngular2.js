@@ -126,6 +126,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
           }
 
           $scope.templates.push(payload);
+          $scope.templateShuffle();
         }
         else if(state == 1){
           $http.post('http://54.254.248.115/rpiGetCampaigns', data).then(function(response){
@@ -198,6 +199,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
           }
 
           $scope.templates.push(payload);
+          $scope.templateShuffle();
         }
 
 
