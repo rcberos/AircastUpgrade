@@ -20,6 +20,10 @@ app.get('/', function (req, res) {
   res.sendFile('index.html', {root: path.join(__dirname, '/public')});
 })
 
+app.get('/demo', function (req, res) {
+  res.sendFile('indexDemo.html', {root: path.join(__dirname, '/public')});
+})
+
 app.get('/myID', function (req, res) {
   // console.log(aircast);
   var data = {
