@@ -69,19 +69,20 @@ function download(CampaignID, CampaignFile, cb){
 
 	var options = {
 	    directory: path.join(__dirname+'/Aircast/'),
-	    filename: CampaignFile.FileName
+	    filename: CampaignFile.FileName,
+	    timeout: 20000
 	}
 	 
 	df(source, options, function(err){
 	    // if (err) throw err
 	    if(err){
 	    	console.log(err);
-	    	cb('error');
+	    	return cb('error');
 	    }
 	    else{
 	    	console.log("meow")
 			console.log('File Downloaded: '+CampaignFile.FileID);
-			cb();
+			return cb();
 	    }
 		    
 	}) 
