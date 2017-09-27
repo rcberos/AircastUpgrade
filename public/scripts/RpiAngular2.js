@@ -1,5 +1,32 @@
 var app = angular.module('MainModule', ['ui.bootstrap', 'ui.event', 'ngAnimate']);
 
+
+app.filter('cut', function () {
+        return function (value, wordwise, max, tail) {
+            if (!value) return '';
+
+            max = parseInt(max, 10);
+            if (!max) return value;
+            if (value.length <= max) return value;
+
+            value = value.substr(0, max);
+            if (wordwise) {
+                var lastspace = value.lastIndexOf(' ');
+                if (lastspace !== -1) {
+                  //Also remove . and , so its gives a cleaner result.
+                  if (value.charAt(lastspace-1) === '.' || value.charAt(lastspace-1) === ',') {
+                    lastspace = lastspace - 1;
+                  }
+                  value = value.substr(0, lastspace);
+                }
+            }
+
+            return value + (tail || ' …');
+        };
+    });
+
+
+
 app.controller('MainController', function($scope, $http, $interval, $timeout, $window, $q){
   // $window.alert('W: '+$window.innerWidth+' H: '+$window.innerHeight);
 
@@ -33,6 +60,123 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   }
 
   $scope.templates.push(payload);
+
+
+
+
+  
+  //news
+  var payload = {
+    CampaignID: 2,
+    tempHtml: 'templates/temp10.html',
+    tempSrc: {
+                video: "assets/audition.mp4",
+                side1: "assets/side1.jpg",
+                side2: "assets/side1.jpg",
+                side3: "assets/side1.jpg",
+                bottom: "assets/bottom.jpg",
+              },
+    tempJs: 'scripts/temp1.js',
+    tempInit: 'temp10Controller'
+  }
+
+
+  $scope.templates.push(payload);
+
+
+  //nearby-restaurant
+  var payload = {
+    CampaignID: 2,
+    tempHtml: 'templates/temp11.html',
+    tempSrc: {
+                video: "assets/audition.mp4",
+                side1: "assets/side1.jpg",
+                side2: "assets/side1.jpg",
+                side3: "assets/side1.jpg",
+                bottom: "assets/bottom.jpg",
+              },
+    tempJs: 'scripts/temp1.js',
+    tempInit: 'temp11Controller'
+  }
+
+
+  $scope.templates.push(payload);
+
+  //weather
+  var payload = {
+    CampaignID: 2,
+    tempHtml: 'templates/temp12.html',
+    tempSrc: {
+                video: "assets/audition.mp4",
+                side1: "assets/side1.jpg",
+                side2: "assets/side1.jpg",
+                side3: "assets/side1.jpg",
+                bottom: "assets/bottom.jpg",
+              },
+    tempJs: 'scripts/temp1.js',
+    tempInit: 'temp12Controller'
+  }
+
+
+  $scope.templates.push(payload);
+
+
+  //currency
+  var payload = {
+    CampaignID: 2,
+    tempHtml: 'templates/temp13.html',
+    tempSrc: {
+                video: "assets/audition.mp4",
+                side1: "assets/side1.jpg",
+                side2: "assets/side1.jpg",
+                side3: "assets/side1.jpg",
+                bottom: "assets/bottom.jpg",
+              },
+    tempJs: 'scripts/temp1.js',
+    tempInit: 'temp13Controller'
+  }
+
+
+  $scope.templates.push(payload);
+
+  //twitter
+  var payload = {
+    CampaignID: 2,
+    tempHtml: 'templates/temp14.html',
+    tempSrc: {
+                video: "assets/audition.mp4",
+                side1: "assets/side1.jpg",
+                side2: "assets/side1.jpg",
+                side3: "assets/side1.jpg",
+                bottom: "assets/bottom.jpg",
+              },
+    tempJs: 'scripts/temp1.js',
+    tempInit: 'temp14Controller'
+  }
+
+
+  $scope.templates.push(payload);
+
+  //hugot
+  var payload = {
+    CampaignID: 2,
+    tempHtml: 'templates/temp15.html',
+    tempSrc: {
+                video: "assets/audition.mp4",
+                side1: "assets/side1.jpg",
+                side2: "assets/side1.jpg",
+                side3: "assets/side1.jpg",
+                bottom: "assets/bottom.jpg",
+              },
+    tempJs: 'scripts/temp1.js',
+    tempInit: 'temp15Controller'
+  }
+
+
+  $scope.templates.push(payload);
+
+
+  
 
   
 
@@ -219,7 +363,8 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
 
   $interval(function(){$scope.getTemplates();}, 5000);
-  // $scope.getTemplates();
+
+
 
 
 });
