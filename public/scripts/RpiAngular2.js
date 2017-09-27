@@ -119,7 +119,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
             CampaignID: 2,
             tempHtml: 'templates/temp4.html',
             tempSrc: {
-                        gif: "assets/AircastOpen.gif",
+                        gif: "assets/AircastOpen.png",
                       },
             tempJs: 'scripts/temp4.js',
             tempInit: 'temp4Controller'
