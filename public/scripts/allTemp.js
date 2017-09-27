@@ -958,8 +958,8 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
         
         
     var config = {
-        'lat':'14.5547',
-        'long':'121.0244',
+        'lat':'14.5838',
+        'long':'121.0597',
         'loopStore': true,
         'loopInterval': 10000,
         'imgList': ['assets/one.jpeg','assets/two.jpeg','assets/three.jpeg','assets/four.jpeg','assets/five.jpeg'],
