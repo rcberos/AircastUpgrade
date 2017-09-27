@@ -117,7 +117,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
           var payload = {
             CampaignID: 2,
-            tempHtml: 'templates/temp1.html',
+            tempHtml: 'templates/temp4.html',
             tempSrc: {
                         gif: "assets/AircastOpen.gif",
                       },
