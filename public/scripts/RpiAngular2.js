@@ -121,8 +121,8 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
             tempSrc: {
                         gif: "assets/AircastOpen.gif",
                       },
-            tempJs: 'scripts/temp1.js',
-            tempInit: 'temp1Controller'
+            tempJs: 'scripts/temp4.js',
+            tempInit: 'temp4Controller'
           }
 
           $scope.templates.push(payload);
