@@ -117,12 +117,12 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
           var payload = {
             CampaignID: 2,
-            tempHtml: 'templates/temp2.html',
+            tempHtml: 'templates/temp1.html',
             tempSrc: {
-                        video: "assets/audition.mp4",
+                        gif: "assets/AircastOpen.gif",
                       },
-            tempJs: 'scripts/temp2.js',
-            tempInit: 'temp2Controller'
+            tempJs: 'scripts/temp1.js',
+            tempInit: 'temp1Controller'
           }
 
           $scope.templates.push(payload);
@@ -192,7 +192,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
             CampaignID: 2,
             tempHtml: 'templates/temp4.html',
             tempSrc: {
-                        gif: "assets/qc.jpg",
+                        gif: "assets/AircastClose.png",
                       },
             tempJs: 'scripts/temp4.js',
             tempInit: 'temp4Controller'
