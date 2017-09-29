@@ -698,7 +698,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
         //source -> latest, top, popular
         'sourceList': [ 'buzzfeed','cnn','espn','google-news','entertainment-weekly','al-jazeera-english','bloomberg,','techcrunch','business-insider-uk'],
-        'source': 'cnn',
+        'source': 'al-jazeera-english',
         'sort':'top',
         'apiKey': '44e7bd68b7d74cef902f1d9c7cb96b72',
         'loopNews':true,
@@ -958,8 +958,8 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
         
         
     var config = {
-        'lat':'14.5838',
-        'long':'121.0597',
+        'lat':'14.629835',
+        'long':'121.027952',
         'loopStore': true,
         'loopInterval': 10000,
         'imgList': ['assets/one.jpeg','assets/two.jpeg','assets/three.jpeg','assets/four.jpeg','assets/five.jpeg'],
