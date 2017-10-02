@@ -693,6 +693,8 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
     espn
     */
 
+    var loopCounter = 0;
+    var interval1, interval2;
             
     var config = {
 
@@ -730,7 +732,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
           if (localStorage.getItem('news-expiration-date') == null) {
 
               getDataFromApi();
-          
+          	
           }else{
 
             if(currentDate == localStorage.getItem('news-expiration-date')) {
@@ -782,6 +784,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
                       localStorage.setItem('news-position',0);
                       localStorage.setItem('news-source',config.source);
                       console.log("fetch data from the local storage");
+                      location.reload();
                       insertDataToScope();
                   } else {
                       console.log("nothing returned");
@@ -790,12 +793,13 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
               .catch(function() {
                   // handle error
                   console.log('error occurred');
+
                   if (localStorage.getItem('news') != null && localStorage.getItem('news') != '') {
                     console.log("fetch data from the local storage");
                     insertDataToScope();
                   }else{
-                    getDataFromApi();
-                    $(".news-loader").fadeIn("slow");
+                    callback();                    
+                    // $(".news-loader").fadeIn("slow");
                   }
               })
 
@@ -872,17 +876,25 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
                   $(".news-upper").css("margin-top","4em")
               }
 
+              if (loopCounter == 0) {
+              	newsloop();
+              	loopCounter++;
+              }
+
+              
         });
           
       }; // end of insertDataToScope
-        
+
+      function newsloop(){
+
         if(config.loopNews){
             
-                var interval1 = setInterval(function () {
+                interval1 = setInterval(function () {
                     removeNewsClass();
                 }, config.loopInterval/2);
             
-                var interval2 = setInterval(function () {
+                interval2 = setInterval(function () {
                   
                     insertDataToScope();
                     addNewsClass();
@@ -890,6 +902,10 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
                 }, config.loopInterval);
             
           }
+
+      }
+        
+
 
 
     function removeNewsClass(){
@@ -952,8 +968,13 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
 	function removeInterval() {
-		clearInterval(interval1);
-		clearInterval(interval2);
+
+		if (interval1 != undefined && interval2 != undefined) {
+			clearInterval(interval1);
+			clearInterval(interval2);		
+		} 
+
+		
 	}
 
     $timeout(removeInterval, 50000);      
@@ -999,6 +1020,8 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
     var restaurantNameList = [];
     var tempCount, counter = 0;
     var temp, restaurantData;
+    var loopCounter = 0;
+    var interval3, interval4;
         
         
     var config = {
@@ -1106,6 +1129,7 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
               .catch(function() {
                   // handle error
                   console.log('error occurred');
+                  callback();
 
               })
 
@@ -1129,7 +1153,7 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
             if (counter > 5) {
                 localStorage.setItem('restaurant-expiration-date',currentTimeStamp);
                 localStorage.setItem('restaurant',JSON.stringify(restaurantList));
-
+                location.reload();
                 getDataFromStorage();
 
             }else {
@@ -1232,25 +1256,37 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
               $("#rateYo").rateYo("rating", ratingRaw);
               changeStore(currentPosition,storeCount);
 
+              if (loopCounter == 0) {
+              	restaurantloop();
+              	loopCounter++;
+              }
+              
+
 
               // loop at the available stores in the array
 
               });
          
       } // end of insert data to scope
-        
+
+      function restaurantloop() {
+
         if (config.loopStore) {
             
-              var interval3 = setInterval(function () {
+              interval3 = setInterval(function () {
                   restaurantRemoveClass();
                 }, config.loopInterval/2);
             
-              var interval4 = setInterval(function () {
+              interval4 = setInterval(function () {
                   insertDataToScope();
                   restaurantAddClass();
                 }, config.loopInterval);
               
           }
+
+      }
+        
+
 
 
       function restaurantAddClass() {
@@ -1305,8 +1341,12 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
 	function removeInterval2(){
-		clearInterval(interval3);
-		clearInterval(interval4);
+
+		if (interval3 != undefined && interval4 != undefined) {
+			clearInterval(interval3);
+			clearInterval(interval4);		
+		} 
+		
 	}
 
     $timeout(removeInterval2, 58000);      
@@ -1327,6 +1367,8 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
           headers: { 'Content-Type': 'application/json' }
         }).then(function(data){
           d.resolve(data);
+        }, function(err) {
+        	d.reject('error');
         });
 
         return d.promise;
@@ -1392,56 +1434,65 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
 
     weather().then(function(d){
 
-      now = weather_now().then(function(data){
-        now_w = {}
-        now_w["temp"] =  data.data.main.temp - 273.15
-        now_w["description"] = data.data.weather[0].description
-        now_w["weather"] = data.data.weather[0].main
-        now_w["greeting"] = getGreetingTime(moment(data.data.dt*1000))
-        now_w["icon"] = get_icon(now_w["weather"], now_w["greeting"])
-        now_w["currentDate"] = today
-        now_w["location"] = data.data.name
+    	if (d == 'error') {
+    		 $(".weather-loader").fadeOut("slow");
+    		callback();   
+    	}else {
 
-        $(".weather-loader").fadeOut("slow",function(){
-            $(".weather").fadeIn(); 
-        });
+		      now = weather_now().then(function(data){
+		        now_w = {}
+		        now_w["temp"] =  data.data.main.temp - 273.15
+		        now_w["description"] = data.data.weather[0].description
+		        now_w["weather"] = data.data.weather[0].main
+		        now_w["greeting"] = getGreetingTime(moment(data.data.dt*1000))
+		        now_w["icon"] = get_icon(now_w["weather"], now_w["greeting"])
+		        now_w["currentDate"] = today
+		        now_w["location"] = data.data.name
 
-        console.log(now_w.weather);
+		        $(".weather-loader").fadeOut("slow",function(){
+		            $(".weather").fadeIn(); 
+		        });
 
-        if (now_w.weather == 'Rain') {
-          $scope.weather_background = "/assets/weather-rainy.png";
-        }else{
-          $scope.weather_background = "/assets/weather-sunny.jpg";
-        }
-          
-        if (now_w["icon"] === 'icon-sun') {
-             now_w["animation"] = 'rotateInfinite' + ' ' + now_w["icon"];
-        }else {
-             now_w["animation"] = 'leftToRight' + ' ' + now_w["icon"];
-        }
-        
-        $scope.now_weather = now_w
+		        console.log(now_w.weather);
 
-      })
+		        if (now_w.weather == 'Rain') {
+		          $scope.weather_background = "/assets/weather-rainy.png";
+		        }else{
+		          $scope.weather_background = "/assets/weather-sunny.jpg";
+		        }
+		          
+		        if (now_w["icon"] === 'icon-sun') {
+		             now_w["animation"] = 'rotateInfinite' + ' ' + now_w["icon"];
+		        }else {
+		             now_w["animation"] = 'leftToRight' + ' ' + now_w["icon"];
+		        }
+		        
+		        $scope.now_weather = now_w
 
-
-      conditions = []
-      _.each(d.data.list, function(v) {
-        x = {}
-
-        x["temp"] = v.temp.day - 273.15
-        x["day"] = moment(v.dt*1000).format('dddd')
-        x["weather"] = v.weather[0].main
-        x["greeting"] = getGreetingTime(moment(v.dt*1000))
-        x["icon"] = get_icon(x["weather"], x["greeting"])
+		      })
 
 
-        conditions.push(x)
-      })
+		      conditions = []
+		      _.each(d.data.list, function(v) {
+		        x = {}
 
-      $scope.conditions = conditions
+		        x["temp"] = v.temp.day - 273.15
+		        x["day"] = moment(v.dt*1000).format('dddd')
+		        x["weather"] = v.weather[0].main
+		        x["greeting"] = getGreetingTime(moment(v.dt*1000))
+		        x["icon"] = get_icon(x["weather"], x["greeting"])
 
-      $scope.now = moment().format('MMMM DD ddd');
+
+		        conditions.push(x)
+		      })
+
+		      $scope.conditions = conditions
+
+		      $scope.now = moment().format('MMMM DD ddd');
+
+
+    	}
+
 
     });
 
@@ -1541,12 +1592,14 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
                                     localStorage.setItem('currency',JSON.stringify(results));
                                 })
                                 .catch(function(){
+
                                     console.log('error occured on the 2nd level of currency');
                                       if (localStorage.getItem('currency') != null && localStorage.getItem('currency') != '') {
                                         console.log("fetch data from the local storage");
                                         getDataFromStorage();
                                       }else{
-                                        getDataFromApi();
+                                      	callback();     
+                                        // getDataFromApi();
                                       }
                                 })
 
@@ -1565,7 +1618,7 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
                         console.log("fetch data from the local storage");
                         getDataFromStorage();
                       }else{
-                        getDataFromApi();
+                        callback();
                       }
                   })
 
@@ -1711,8 +1764,11 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
             'animationOut': 'zoomOutUp'
         }
 
+
+        var loopCounter = 0;
         var twitterCounter =  parseInt(localStorage.getItem('twitter-counter')) || 0;
         var temp, twitterData, hashtagList;
+        var interval7, interval8;
 
 
        function checkIfTwitterDataExpired(){
@@ -1767,6 +1823,7 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
                       localStorage.setItem('twitter',JSON.stringify(response.data));
                       localStorage.setItem('twitter-position',0);
                       console.log("fetch data from the local storage");
+                      location.reload();
                       getDataFromStorage();
                   } else {
                       console.log("nothing returned");
@@ -1779,8 +1836,8 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
                     console.log("fetch data from the local storage");
                     getDataFromStorage();
                   }else{
-                    getDataFromApi();
-                    $(".twitter .loader").fadeIn("slow");
+                    callback();
+                    // $(".twitter .loader").fadeIn("slow");
                   }
               })
 
@@ -1852,29 +1909,38 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
             
             changePosition(currentPosition,tweetsCount);
             // checkIfDataEnds();
+
+              if (loopCounter == 0) {
+              	twitterloop();
+              	loopCounter++;
+              }
+            
         
         }
 
             
+        function twitterloop(){
 
-        
-        if (config.loop) {
+	        if (config.loop) {
 
-              var interval7 = setInterval(function () {
-                  twitterRemoveClass();
-                }, config.loopInterval/2);
+	              interval7 = setInterval(function () {
+	                  twitterRemoveClass();
+	                }, config.loopInterval/2);
 
-            
-              var interval8 = setInterval(function () {
+	            
+	              interval8 = setInterval(function () {
 
-                  $scope.$apply(function(){
-                    inserDataToScope();
-                    twitterAddClass();
-                    });
-                    
-                }, config.loopInterval);
-            
+	                  $scope.$apply(function(){
+	                    inserDataToScope();
+	                    twitterAddClass();
+	                    });
+	                    
+	                }, config.loopInterval);
+	            
+	        }        	
         }
+        
+
         
 
         function twitterRemoveClass(){
@@ -1923,8 +1989,13 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
 	function removeInterval() {
-		clearInterval(interval7);
-		clearInterval(interval8);
+
+		if (interval7 != undefined && interval8 != undefined) {
+			clearInterval(interval7);
+			clearInterval(interval8);		
+		} 
+
+
 	}
 
     $timeout(removeInterval, 58000);   
@@ -1942,6 +2013,8 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
         'animationEnter': 'flipInX',
         'animationOut' : 'flipOutX'
     }
+    var loopCounter = 0;
+    var interval5, interval6;
     
     
     var hugotList = [
@@ -1984,27 +2057,38 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
             
              $scope.hugotText = hugotList[makeUniqueRandom()];
 
+           	 if (loopCounter == 0) {
+           	 	hugotloop();
+           	 	loopCounter++;
+           	 }
+             
+
              
         }
-        
-        
-        if (config.loop) {
-            
-            insertDataToScope();
-    
-            var interval5 = setInterval(function(){
-                hugotRemoveClass();
-            },config.loopInterval/2);
 
-            var interval6 = setInterval(function(){
+        function hugotloop(){
 
-                insertDataToScope();
-                hugotAddClass();
-                $scope.$apply();
+	         if (config.loop) {
+	            
+	            insertDataToScope();
+	    
+	            interval5 = setInterval(function(){
+	                hugotRemoveClass();
+	            },config.loopInterval/2);
 
-            },config.loopInterval);
-    
+	            interval6 = setInterval(function(){
+
+	                insertDataToScope();
+	                hugotAddClass();
+	                $scope.$apply();
+
+	            },config.loopInterval);
+	    
+	        }       	
         }
+        
+        
+
 
         function hugotRemoveClass(){
             $(".hugot-text").delay(2000).removeClass(config.animationEnter);
@@ -2019,8 +2103,13 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
 	function removeInterval() {
-		clearInterval(interval5);
-		clearInterval(interval6);
+
+		if (interval5 != undefined && interval6 != undefined) {
+			clearInterval(interval5);
+			clearInterval(interval6);			
+		} 
+
+
 	}
 
     $timeout(removeInterval, 29000);   
@@ -2044,10 +2133,10 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
     }
 
     var temp, movieData;
-
+    var loopCounter = 0;
     var currentPosition = parseInt(localStorage.getItem('movie-position')) || 0;
     var moviesLength = 0;
-    var movies; 
+    var movies, interval9, interval10; 
 
     config.url = "https://api.themoviedb.org/3/movie/"+config.filter+"?api_key=f2ebc8131c456f6ee2f134ac299aa40f&language=en&US";
 
@@ -2113,6 +2202,7 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
                       localStorage.setItem('movie-expiration-date',currentTimeStamp);
                       localStorage.setItem('movie',JSON.stringify(response.data));
                       localStorage.setItem('movie-position',0);
+                      location.reload();
                       console.log("fetch data from the local storage");
                       getDataFromStorage();
                   } else {
@@ -2126,7 +2216,7 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
                     console.log("fetch data from the local storage");
                     getDataFromStorage();
                   }else{
-                    getDataFromApi();
+                    callback();
                   }
               })
 
@@ -2164,6 +2254,11 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
         $scope.backdrop_path = "http://image.tmdb.org/t/p/"+config.backgroundSize+"/"+result.backdrop_path;
         $scope.animation = config.animation;
 
+        if (loopCounter == 0) {
+        	movieloop();
+        	loopCounter++;	
+        }
+        
 
     }
 
@@ -2202,25 +2297,37 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
     }
 
 
-    if (config.loop) {
+    function movieloop(){
 
-	 var interval9 = setInterval(function () {
-	        movieRemoveClass();     
-	    }, config.loopInterval/2);
+	    if (config.loop) {
 
-	  var interval10 = setInterval(function () {
-	        changeMovie();
-	        movieAddClass();
-	        $scope.$apply();
-	    }, config.loopInterval);
+		 interval9 = setInterval(function () {
+		        movieRemoveClass();     
+		    }, config.loopInterval/2);
+
+		  interval10 = setInterval(function () {
+		        changeMovie();
+		        movieAddClass();
+		        $scope.$apply();
+		    }, config.loopInterval);
+
+	    }
 
     }
 
 
 
+
+
 	function removeInterval() {
-		clearInterval(interval9);
-		clearInterval(interval10);
+
+
+		if (interval9 != undefined && interval10 != undefined) {
+			clearInterval(interval9);
+			clearInterval(interval10);		
+		} 
+
+
 	}
 
     $timeout(removeInterval, 39000);   
@@ -2228,3 +2335,4 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
 };
+
