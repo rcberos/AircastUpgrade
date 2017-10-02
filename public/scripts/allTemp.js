@@ -676,7 +676,7 @@ function temp5Controller($scope, $window, $timeout, $http, temp5Src, callback){
 
 function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
-    /*
+ /*
     1. entertainment
     buzzfeed and entertainment-weekly
 
@@ -698,7 +698,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
         //source -> latest, top, popular
         'sourceList': [ 'buzzfeed','cnn','espn','google-news','entertainment-weekly','al-jazeera-english','bloomberg,','techcrunch','business-insider-uk'],
-        'source': 'al-jazeera-english',
+        'source': 'cnn',
         'sort':'top',
         'apiKey': '44e7bd68b7d74cef902f1d9c7cb96b72',
         'loopNews':true,
@@ -709,7 +709,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
             'espn': '/assets/logo-espn.png',
             'google-news': '/assets/logo-google-news.png',
             'entertainment-weekly': '/assets/logo-entertainment-weekly.png',
-            'al-jazeera-english': 'assets/logo-aljazeera.png',
+            'al-jazeera-english': '/assets/logo-aljazeera.png',
             'bloomberg': '/assets/logo-bloomberg.png',
             'techcrunch': '/assets/logo-techcrunch.png',
             'business-insider': '/assets/logo-business-insider.png'
@@ -722,54 +722,82 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
         console.log(config.url);
         console.log("config source -> " + config.source);
     
-      // clear data from storage
-      // this will delete the json file saved in the local storage
-      // localStorage.removeItem('news');
-    
-    if (localStorage.getItem('news') === null) { 
-          getDataFromApi();
-        console.log("news is null, fetching data from the api");
-      }else {
+
+        function checkIfNewsDataExpired(){
+
+          var currentDate = moment().format('MM-DD-YYYY');
+
+          if (localStorage.getItem('news-expiration-date') == null) {
+
+              getDataFromApi();
           
-          if (localStorage.getItem("news-source") === null) {
-               localStorage.setItem("news-source",config.source);
-               localStorage.setItem("news-sort",config.sort);
-              localStorage.setItem("newsPosition",0);
-               getDataFromApi();
-              console.log("news-source is null, setting data to local storage and calling getDataFromApi()");
-          }else {
-              
-              if (localStorage.getItem("news-source") == config.source && localStorage.getItem("news-sort") == config.sort) {
-                  console.log("local storage source -> " + localStorage.getItem("news-source"));
-                  console.log("news source is still the same, getting data from localstorage");
-                  insertDataToScope();
-              }else {
-                  console.log("news source is not the same with the config.source, getting data from api");
-                  localStorage.setItem("news-source",config.source);
-                  localStorage.setItem("newsPosition",0);
-                  localStorage.setItem("news-sort",config.sort);
-                  getDataFromApi();
+          }else{
+
+            if(currentDate == localStorage.getItem('news-expiration-date')) {
+              console.log("News data is still within the same day");
+              console.log("Getting data from the local storage");
+
+              if (localStorage.getItem('news-source') == null) {
+                localStorage.setItem('news-source',config.source);
+                getDataFromApi();
               }
-              
+
+              if (localStorage.getItem('news-source') != config.source) {
+                console.log("news source is not the same with the config.source, getting data from api");
+                getDataFromApi();
+              }
+
+              insertDataToScope();
+
+            }else{
+
+              getDataFromApi();
+
+
+            }
+
           }
-         
-      }
+
+        } // end of the checkIfNewsDataExpired function
+
+        
+    checkIfNewsDataExpired();
+
         
 
       // this function  will get data from the api if the json file is not yet saved in the local storage
       function getDataFromApi() {
 
           console.log("fetch data from news api");
-          $http.get(config.url).then(function(result) {
-              
-            if (result.status == 200) {
-                localStorage.setItem('news',JSON.stringify(result.data));
-                insertDataToScope();
-            }else {
-                console.log("no internet, will get back to this later");
-            }
-              
-          });
+
+
+          $http.get(config.url)
+              .then(function(response) {
+
+                  var currentDate = moment().format('MM-DD-YYYY');
+
+                  if (response.data) {
+                      localStorage.setItem('news-expiration-date',currentDate);
+                      localStorage.setItem('news',JSON.stringify(response.data));
+                      localStorage.setItem('news-position',0);
+                      localStorage.setItem('news-source',config.source);
+                      console.log("fetch data from the local storage");
+                      insertDataToScope();
+                  } else {
+                      console.log("nothing returned");
+                  }
+              })
+              .catch(function() {
+                  // handle error
+                  console.log('error occurred');
+                  if (localStorage.getItem('news') != null && localStorage.getItem('news') != '') {
+                    console.log("fetch data from the local storage");
+                    insertDataToScope();
+                  }else{
+                    getDataFromApi();
+                    $(".news-loader").fadeIn("slow");
+                  }
+              })
 
       }
 
@@ -777,20 +805,23 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
       function insertDataToScope() {
           
           $(".news-loader").fadeOut("slow",function(){
-                   
-              console.log("fetch data from the local storage");
+  
               var x = localStorage.getItem('news');
               var parsedData = JSON.parse(x);
 
+              //check if data is empty
+              if (parsedData == '') {
+                getDataFromApi();
+              }
+
               var newsList = parsedData.articles;
-              var currentPosition = localStorage.getItem("newsPosition");
+              var currentPosition = parseInt(localStorage.getItem("news-position")) || 0;
               var newsCount = newsList.length-1;
               var article = newsList[currentPosition];
-              console.log("news count: " + newsCount);
 
               var title = article.title;
               var author = article.author || "";
-              console.log("raw-date: " + article.publishedAt);
+
               var rawDate = article.publishedAt;
               var dateCreated;
 
@@ -800,14 +831,13 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
                     dateCreated = "";
               }
 
-              console.log("formatted date: " + dateCreated);
-              console.log("current position -> " + currentPosition);
+              console.log("News-Position " + currentPosition + "/"+newsCount);
 
               var description = article.description || "";
               var featuredImage = article.urlToImage;
 
               if (featuredImage === null || featuredImage == "") {
-                  featuredImage = "assets/images/news-background.jpeg";
+                  featuredImage = "assets/news-background.jpeg";
               }
 
                 var articleAside =  returnArticle(currentPosition,newsCount);
@@ -824,7 +854,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
                     'article1': article1,
                     'article2':article2,
                     'article3':article3,
-                    'sourceIcon': config.image[config.source],
+                    'sourceIcon': config.image[config.source]
                 }
               
               $scope.$apply();
@@ -849,41 +879,50 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
         if(config.loopNews){
             
                 var interval1 = setInterval(function () {
-                    
-                    $(".header").delay(2000).removeClass("fadeInLeft");
-                    $(".news").delay(2000).removeClass("news-animation");
-                    $(".news-aside-div").delay(2000).removeClass("fadeInRight");
-                    $(".divider-bottom").delay(2000).removeClass("fadeInUp");
-                    $(".news-item").delay(2000).removeClass("fadeInRight");
-                    $(".news-source-div").delay(2000).removeClass("fadeInDown");
-                   
-                    
+                    removeNewsClass();
                 }, config.loopInterval/2);
             
-              var interval2 = setInterval(function () {
+                var interval2 = setInterval(function () {
                   
                     insertDataToScope();
+                    addNewsClass();
 
-                    $(".header").addClass("fadeInLeft");
-                    $(".news").addClass("news-animation");
-                    $(".news-aside-div").addClass("fadeInRight");
-                    $(".divider-bottom").addClass("fadeInUp");
-                    $(".news-item").addClass("fadeInRight");
-                    $(".news-source-div").addClass("fadeInDown");
-                  
                 }, config.loopInterval);
             
           }
+
+
+    function removeNewsClass(){
+
+		$(".news .header").delay(2000).removeClass("fadeInLeft");
+        $(".news .news").delay(2000).removeClass("news-animation");
+        $(".news .news-aside-div").delay(2000).removeClass("fadeInRight");
+        $(".news .divider-bottom").delay(2000).removeClass("fadeInUp");
+        $(".news .news-item").delay(2000).removeClass("fadeInRight");
+        $(".news .news-source-div").delay(2000).removeClass("fadeInDown");
+    
+    }
+
+    function addNewsClass(){
+
+        $(".news .header").addClass("fadeInLeft");
+        $(".news .news").addClass("news-animation");
+        $(".news .news-aside-div").addClass("fadeInRight");
+        $(".news .divider-bottom").addClass("fadeInUp");
+        $(".news .news-item").addClass("fadeInRight");
+        $(".news .news-source-div").addClass("fadeInDown");
+
+    }      
         
     function changeNews(currentPosition,newsCount) {
 
               //saving data in local storage
               if (currentPosition >= newsCount) {
                   currentPosition = 0;
-                  localStorage.setItem('newsPosition', currentPosition);
+                  localStorage.setItem('news-position', currentPosition);
               } else {
                   currentPosition++;
-                  localStorage.setItem('newsPosition', currentPosition);
+                  localStorage.setItem('news-position', currentPosition);
               }
 
           }  //end of changeNews function
@@ -909,6 +948,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
              return articleAsidePosition;
           }
          
+         
 
 
 	function removeInterval() {
@@ -916,8 +956,8 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 		clearInterval(interval2);
 	}
 
-    $timeout(removeInterval, 38000);      
-	$timeout(callback, 39000);
+    $timeout(removeInterval, 50000);      
+	$timeout(callback, 52000);
 
 }
 
@@ -947,23 +987,27 @@ function UpdateWallet($http, CampaignID){
 }
 
 function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
-
-        
+      
 /*        sample data
         makati -> lat: 14.5547 long: 121.0244
         quezon -> lat: 14.6760 long: 121.0437
         pasay -> lat: 14.5378 long: 121.0014
         mendiola -> lat: 14.598718 long: 120.992822
 */
+
+    var restaurantList = [];
+    var restaurantNameList = [];
+    var tempCount, counter = 0;
+    var temp, restaurantData;
         
         
     var config = {
-        'lat':'14.629835',
-        'long':'121.027952',
+        'lat': 14.609695,
+        'long': 121.0747,
         'loopStore': true,
         'loopInterval': 10000,
-        'imgList': ['assets/one.jpeg','assets/two.jpeg','assets/three.jpeg','assets/four.jpeg','assets/five.jpeg'],
-        'bgList':  { 'general':'assets/bg_universal.png', 'korean':'assets/bg_jap_kor.png', 'asian':'assets/bg_asian.png' },
+        'imgList': ['/assets/sample-image.jpg','/assets/one.jpeg','/assets/two.jpeg','/assets/three.jpeg','/assets/four.jpeg','/assets/five.jpeg'],
+        'bgList':  { 'general':'/assets/bg_universal.png', 'korean':'/assets/bg_jap_kor.png', 'asian':'/assets/bg_asian.png' },
         'calculateKm': function(lat1, lon1, lat2, lon2){
                 var R = 6371; // km
                 var dLat = config.toRad(lat2 - lat1);
@@ -993,72 +1037,141 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
         starWidth: "50px",
     });
 
-      // clear data from storage
-      // this will delete the json file saved in the local storage
-      // localStorage.removeItem('resto');
-        
-    
-        if (localStorage.getItem('resto') === null) { 
-          getDataFromApi();
-        console.log("news is null, fetching data from the api");
-      }else {
+
+      function checkIfRestaurantDataExpired(){
+
+          var currentTimeStamp = moment().unix();
+
+          if (localStorage.getItem('restaurant-expiration-date') == null) {
+
+              fetchRestaurantData(config.url);
           
-          if (localStorage.getItem("resto-lat") === null || localStorage.getItem("resto-long") === null) {
-               localStorage.setItem("resto-lat",config.lat);
-               localStorage.setItem("resto-long",config.long);
-               localStorage.setItem("storePosition",1);
-               getDataFromApi();
-              console.log("resto lat and long is null, setting data to local storage and calling getDataFromApi()");
-          }else {
-              
-              if (localStorage.getItem("resto-lat") == config.lat || localStorage.getItem("resto-long") == config.long) {
-                  console.log("news source is still the same, getting data from localstorage");
-                  insertDataToScope();
-              }else {
-                  console.log("news source is not the same with the config.source, getting data from api");
-                  localStorage.setItem("resto-lat",config.lat);
-                  localStorage.setItem("resto-long",config.long);
-                  localStorage.setItem("storePosition",0);
-                  getDataFromApi();
+          }else{
+
+            if(localStorage.getItem('restaurant-expiration-date') >= currentTimeStamp) {
+              console.log("restaurant data is still good and data is still within 1 month.");
+              console.log("Getting data from the local storage");
+
+              if (localStorage.getItem('restaurant') == null || localStorage.getItem('restaurant') == '') {
+                console.log("data is not good, getting data from the api");
+                fetchRestaurantData(config.url);
               }
-              
+
+              getDataFromStorage();
+
+            }else{
+
+              fetchRestaurantData(config.url);
+
+
+            }
+
           }
-      }
-        
-      // this function  will get data from the api if the json file is not yet saved in the local storage
-      function getDataFromApi() {
 
-          console.log("fetch data from zomato api");
-          $http.get(config.url,config.zomatoConfig).then(function(result) {
-              localStorage.setItem('resto',JSON.stringify(result.data));
-              insertDataToScope();
-          });
+        } // end of the checkIfNewsDataExpired function
 
+        checkIfRestaurantDataExpired();
+
+        function fetchRestaurantData(url){
+
+            var currentTimeStamp = moment().unix() + 2592000;
+
+           $http.get(url,config.zomatoConfig)
+              .then(function(response) {
+
+                  if (response.data) {
+
+                    var restaurants = response.data.nearby_restaurants;
+
+                    for (var i = 0 ; i < restaurants.length; i++) {
+
+                      if (restaurantNameList.indexOf(restaurants[i].restaurant.name) == -1) {
+                        restaurantNameList.push(restaurants[i].restaurant.name);
+                        restaurantList.push(restaurants[i]);
+                      }
+                    }
+
+                      if (restaurantList.length < 100) {
+                        checkIfListReach50(restaurantList.length);
+                      }else{
+                        localStorage.setItem('restaurant-expiration-date',currentTimeStamp);
+                        localStorage.setItem('restaurant',JSON.stringify(restaurantList));
+                        getDataFromStorage();
+                      }
+                      
+                  } else {
+                      console.log("nothing returned");
+                  }
+              })
+              .catch(function() {
+                  // handle error
+                  console.log('error occurred');
+
+              })
+
+        }
+
+        function checkIfListReach50(restaurantListLength){
+
+           var currentTimeStamp = moment().unix() + 2592000;
+           console.log(restaurantListLength);
+
+            config.lat += .01;
+
+            if (tempCount == restaurantListLength) {
+              config.long += 0.01;
+              counter++;
+            }else {
+              tempCount = restaurantListLength;
+              counter = 0;
+            }
+
+            if (counter > 5) {
+                localStorage.setItem('restaurant-expiration-date',currentTimeStamp);
+                localStorage.setItem('restaurant',JSON.stringify(restaurantList));
+
+                getDataFromStorage();
+
+            }else {
+              url = 'https://developers.zomato.com/api/v2.1/geocode?lat=' + config.lat + '&lon=' + config.long;
+              fetchRestaurantData(url);
+            }
+
+
+        }
+
+        function getDataFromStorage() {
+
+          console.log("fetch data from local storage");
+
+          temp = localStorage.getItem('restaurant');
+          restaurantData = JSON.parse(temp);
+          console.log(restaurantData);
+          // localStorage.setItem('restaurant-position',0);
+
+          insertDataToScope();
       }
+
+
+    
 
       //insert all the data to the angular $scope
       function insertDataToScope() {
           
           $(".restaurant-loader").fadeOut("slow",function(){
               
-            console.log("fetch data from local storage");
-
-              var x = localStorage.getItem('resto');
-              var result = JSON.parse(x);
-              console.log("inserting data now");
-
-              var nearbyResto = result.nearby_restaurants;
+              var nearbyResto = restaurantData;
               var storeCount = nearbyResto.length - 1;
-              var currentPosition = localStorage.getItem('storePosition');
+              var currentPosition =  parseInt(localStorage.getItem('restaurant-position')) || 0;
               var bg = config.bgList.general;
 
-              if (localStorage.getItem('storePosition') === null) {
+              if (localStorage.getItem('restaurant-position') === null) {
                   currentPosition = 1;
               }
 
               //getting the data ready
               var storePosition = currentPosition;
-              console.log("current position: " + storePosition);
+              console.log("current position: " + storePosition + "/" + storeCount);
               var store = nearbyResto[storePosition].restaurant;
               var distanceLatitude = store.location.latitude;
               var distanceLongitude = store.location.longitude;
@@ -1100,7 +1213,6 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
                   'votes': votes
               }
               
-              console.log($scope.data);
               $scope.$apply();
 
               //change padding to center the cuisines if it reaches the 2nd line
@@ -1120,6 +1232,7 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
               $("#rateYo").rateYo("rating", ratingRaw);
               changeStore(currentPosition,storeCount);
 
+
               // loop at the available stores in the array
 
               });
@@ -1129,34 +1242,42 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
         if (config.loopStore) {
             
               var interval3 = setInterval(function () {
-                  
-                $(".restaurant-top, .restaurant-background").removeClass("restaurant-animation");
-                $(".restaurant-top-div, .distance-div, .restaurant-bottom-review, .restaurant-bottom-rating").removeClass("fadeInUp");    
-                  
+                  restaurantRemoveClass();
                 }, config.loopInterval/2);
             
               var interval4 = setInterval(function () {
-                
                   insertDataToScope();
-  
-                  $(".restaurant-top, .restaurant-background").addClass("restaurant-animation");
-                  $(".restaurant-top-float").addClass("fadeInLeft");
-                  $(".restaurant-top-div, .distance-div, .restaurant-bottom-review, .restaurant-bottom-rating").addClass("fadeInUp");
-                  
+                  restaurantAddClass();
                 }, config.loopInterval);
               
           }
+
+
+      function restaurantAddClass() {
+
+          $(".restaurant .restaurant-top, .restaurant .restaurant-background").addClass("restaurant-animation");
+          $(".restaurant .restaurant-top-float").addClass("fadeInLeft");
+          $(".restaurant .restaurant-top-div,.restaurant .distance-div, .restaurant .restaurant-bottom-review, .restaurant .restaurant-bottom-rating").addClass("fadeInUp");
+      }
+
+      function restaurantRemoveClass(){
+          $(".restaurant .restaurant-top, .restaurant .restaurant-background").removeClass("restaurant-animation");
+          $(".restaurant .restaurant-top-float").removeClass("fadeInLeft");
+          $(".restaurant .restaurant-top-div, .restaurant .distance-div, .restaurant .restaurant-bottom-review, .restaurant .restaurant-bottom-rating").removeClass("fadeInUp");    
+      }
+
+
         
-              //this will be the state of the current store, saved in local storage
+      //this will be the state of the current store, saved in local storage
       function changeStore(currentPosition,storeCount) {
 
               //saving data in localstorage
               if (currentPosition >= storeCount) {
                   currentPosition = 0;
-                  localStorage.setItem('storePosition', currentPosition);
+                  localStorage.setItem('restaurant-position', currentPosition);
               } else {
                   currentPosition++;
-                  localStorage.setItem('storePosition', currentPosition);
+                  localStorage.setItem('restaurant-position', currentPosition);
               }
 
           }
@@ -1182,19 +1303,20 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
           }
 
 
+
 	function removeInterval2(){
 		clearInterval(interval3);
 		clearInterval(interval4);
 	}
 
-    $timeout(removeInterval2, 29000);      
-	$timeout(callback, 30000);
+    $timeout(removeInterval2, 58000);      
+	$timeout(callback, 60000);
 
 }
 
 function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $q){ 
 
-        var today = moment().format('MMM. DD, YYYY');
+    var today = moment().format('MMM. DD, YYYY');
  
     weather = function() {
         var d = $q.defer();
@@ -1287,9 +1409,9 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
         console.log(now_w.weather);
 
         if (now_w.weather == 'Rain') {
-          $scope.weather_background = "assets/weather-rainy.png";
+          $scope.weather_background = "/assets/weather-rainy.png";
         }else{
-          $scope.weather_background = "assets/weather-sunny.jpg";
+          $scope.weather_background = "/assets/weather-sunny.jpg";
         }
           
         if (now_w["icon"] === 'icon-sun') {
@@ -1329,54 +1451,141 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
 
 function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $q){ 
 
-
+        
         var today = new Date();
         var yesterday = new Date(today.getTime() - 86400000);
         var currencyToDisplay = ["PHP","JPY","EUR"];
-        
+        var temp, currencyData;
+        var errorCounter = 0;
+
+
         var config = {
-            'currentDate': moment(today).format('YYYY-MM-D'),
-            'yesterdayDate': moment(yesterday).format('YYYY-MM-D'),
+            'currentDate': moment(today).format('YYYY-MM-DD'),
+            'yesterdayDate': moment(yesterday).format('YYYY-MM-DD'),
         }
         
         console.log(config.currentDate);
         console.log(config.yesterdayDate);
 
-        function getTodayCurrency(){
-            
-            //get the current data today
-            var url = 'https://openexchangerates.org/api/historical/'+ config.currentDate +'.json?app_id=611c0c2870aa4804a4014db80c91ee2d';
-            
-                var results = [];
-            
-                $http.get(url).then(function(data){
-                    
-                    if (data.status == 200) {
-                        results.push(data.data.rates);
-                        
-                        //get the yesterday data
-                        url = 'https://openexchangerates.org/api/historical/'+ config.yesterdayDate +'.json?app_id=611c0c2870aa4804a4014db80c91ee2d';
-                        
-                        $http.get(url).then(function(data){
-                            
-                            if (data.status == 200) {
-                                results.push(data.data.rates);
-                                calculateRate(results);
-                                
-                            }else {
-                                //do something here to catch error
-                            }
-                        }); //end of 2nd $http.get
-                    }else {
-                        //do something here to catch error
+
+        function checkIfCurrencyDataExpired(){
+
+                var currentTimeStamp = moment().unix();
+
+                if (localStorage.getItem('currency-expiration-date') == null) {
+
+                    getDataFromApi();
+                
+                }else{
+
+                  if(localStorage.getItem('currency-expiration-date') >= currentTimeStamp) {
+                    console.log("currency data is still good and data is still within 2 hours.");
+                    console.log("Getting data from the local storage");
+
+                    if (localStorage.getItem('currency') == null || localStorage.getItem('currency') == '') {
+                      console.log("data is not good, getting data from the api");
+                      getDataFromApi();
                     }
-                });// end of 1st $http.get
+
+                    getDataFromStorage();
+
+                  }else{
+
+                    getDataFromApi();
+
+
+                  }
+
+                }
+
+              } // end of the checkIfNewsDataExpired function
+
+
+         function getDataFromApi() {
+
+            errorCounter++;
+
+            if(errorCounter > 10) {
+                //add some error catch here if the internet is not working
+                getDataFromStorage();
+
+            } else {
+
+
+                console.log("fetch data from currency api");
+
+                //get the current data today
+                var url = 'https://openexchangerates.org/api/latest.json?app_id=611c0c2870aa4804a4014db80c91ee2d';
+                var results = [];
+                
+
+              $http.get(url)
+                  .then(function(response) {
+
+                      console.log(response);
+
+                      var currentTimeStamp = moment().unix() + 7200;
+
+                      if (response.data) {
+
+                          results.push(response.data.rates);
+
+                          url = 'https://openexchangerates.org/api/historical/'+ config.yesterdayDate +'.json?app_id=611c0c2870aa4804a4014db80c91ee2d';
+
+                          $http.get(url)
+                                .then(function(response) {
+
+                                    results.push(response.data.rates);
+
+                                    localStorage.setItem('currency-expiration-date',currentTimeStamp);
+                                    localStorage.setItem('currency',JSON.stringify(results));
+                                })
+                                .catch(function(){
+                                    console.log('error occured on the 2nd level of currency');
+                                      if (localStorage.getItem('currency') != null && localStorage.getItem('currency') != '') {
+                                        console.log("fetch data from the local storage");
+                                        getDataFromStorage();
+                                      }else{
+                                        getDataFromApi();
+                                      }
+                                })
+
+
+
+                          console.log("fetch data from the local storage");
+                          getDataFromStorage();
+                      } else {
+                          console.log("nothing returned");
+                      }
+                  })
+                  .catch(function() {
+                      // handle error
+                      console.log('error occurred on the first level of currency');
+                      if (localStorage.getItem('currency') != null && localStorage.getItem('currency') != '') {
+                        console.log("fetch data from the local storage");
+                        getDataFromStorage();
+                      }else{
+                        getDataFromApi();
+                      }
+                  })
+
+            }
+
             
-        } //end of getTodayCurrency function;
+      }
+
+
+    function getDataFromStorage() {
+
+          
+          temp = localStorage.getItem('currency');
+          currencyData = JSON.parse(temp);
+
+          inserDataToScope(currencyData);
+      }
+
         
-        function calculateRate(rates) {
-            
-            console.log(rates);
+        function inserDataToScope(rates) {
             
             var rate_today= rates[0],
                   rate_yesterday = rates[1],
@@ -1433,7 +1642,7 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
         }
         
         function insertDataToScope(result){
-            
+
             $scope.todayYen = "P "+result[0].yen;
             $scope.todayUsd = "P "+result[0].usd;
             $scope.todayEuro = "P "+result[0].euro;
@@ -1450,9 +1659,9 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
             $scope.euro = temp["euro"].substring(0,2);
             
             var signs = {
-                'down': 'assets/currency-down.png',
-                'equal': 'assets/currency-equal.png',
-                'up': 'assets/currency-up.png'
+                'down': '/assets/currency-down.png',
+                'equal': '/assets/currency-equal.png',
+                'up': '/assets/currency-up.png'
             }
             $scope.signs = {};
             
@@ -1482,17 +1691,16 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
             }else {
                 $scope.signs.euro = signs.down;
             }
-
-            
             
         }
         
-        getTodayCurrency();
+        checkIfCurrencyDataExpired();
+
         $timeout(callback, 15000);
         
 };
 
-
+//tweeter
 function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){ 
 
    
@@ -1502,28 +1710,131 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
             'animationIn': 'zoomInUp',
             'animationOut': 'zoomOutUp'
         }
-    
-        $http.get("/api/twitter").then(function(data){
-            
-            $(".loader").fadeOut();
-            localStorage.setItem("tweetList",JSON.stringify(data));
-            localStorage.setItem("tweetPosition",0);
-            insertToScope();
-        })
-        
-        
-        function  insertToScope() {
-            
-            var temp = localStorage.getItem("tweetList");
-            var data = JSON.parse(temp);
 
-            var tweets = data.data.status.statuses;
-            var tweetsCount  = tweets.length-1;
-            var currentPosition = localStorage.getItem('tweetPosition') || 0;
-            console.log('currentPosition: ' +currentPosition);
-            var nextTweetPosition = (currentPosition < tweetsCount)? parseInt(currentPosition)+1 : 0;
+        var twitterCounter =  parseInt(localStorage.getItem('twitter-counter')) || 0;
+        var temp, twitterData, hashtagList;
+
+
+       function checkIfTwitterDataExpired(){
+
+                var currentTimeStamp = moment().unix();
+
+                if (localStorage.getItem('twitter-expiration-date') == null) {
+
+                    getDataFromApi();
                 
-            $scope.topHashtag = removeSpace(data.data.status.topHastagToday);
+                }else{
+
+                  if(localStorage.getItem('twitter-expiration-date') >= currentTimeStamp) {
+                    console.log("Twitter data is still good and data is still within 4 hours.");
+                    console.log("Getting data from the local storage");
+
+                    if (localStorage.getItem('twitter') == null || localStorage.getItem('twitter') == '') {
+                      console.log("data is not good, getting data from the api");
+                      getDataFromApi();
+                    }
+
+                    getDataFromStorage();
+
+                  }else{
+
+                    getDataFromApi();
+
+
+                  }
+
+                }
+
+              } // end of the checkIfNewsDataExpired function
+
+
+        checkIfTwitterDataExpired();
+
+         function getDataFromApi() {
+
+          console.log("fetch data from twitter api");
+
+
+          $http.get('/api/twitter')
+              .then(function(response) {
+
+                  console.log(response);
+
+                  var currentTimeStamp = moment().unix() + 14400;
+
+                  if (response.data) {
+                      localStorage.setItem('twitter-expiration-date',currentTimeStamp);
+                      localStorage.setItem('twitter',JSON.stringify(response.data));
+                      localStorage.setItem('twitter-position',0);
+                      console.log("fetch data from the local storage");
+                      getDataFromStorage();
+                  } else {
+                      console.log("nothing returned");
+                  }
+              })
+              .catch(function() {
+                  // handle error
+                  console.log('error occurred');
+                  if (localStorage.getItem('twitter') != null && localStorage.getItem('twitter') != '') {
+                    console.log("fetch data from the local storage");
+                    getDataFromStorage();
+                  }else{
+                    getDataFromApi();
+                    $(".twitter .loader").fadeIn("slow");
+                  }
+              })
+
+      }
+
+      function currentHashtag(){
+
+          if (twitterCounter < hashtagList.length-1) {
+            inserDataToScope();
+            twitterCounter++;
+          }else{
+            twitterCounter = 0;
+            inserDataToScope();
+          }
+
+          console.log("Twitter Counter: ", twitterCounter);
+      }
+        
+        function getDataFromStorage() {
+
+          
+          temp = localStorage.getItem('twitter');
+          twitterData = JSON.parse(temp);
+
+          hashtagList = twitterData.pop();
+
+          // localStorage.setItem('twitter-position',0);
+          // localStorage.setItem('twitter-counter',0);
+          $(".twitter .loader").fadeOut("slow");
+          inserDataToScope();
+      }
+
+      function inserDataToScope(){
+
+
+            var tweets = twitterData[twitterCounter].statuses;
+            var tweetsCount  = tweets.length-1;
+            var currentPosition = localStorage.getItem('twitter-position') || 0;
+            var nextTweetPosition = (currentPosition < tweetsCount)? parseInt(currentPosition)+1 : 0;
+            console.log("Current Tweet Position: " + currentPosition +"/"+tweetsCount);
+                
+            $scope.topHashtag = removeSpace(hashtagList[twitterCounter]);
+            
+            
+            if ($scope.topHashtag.length > 15) {
+                $(".hashtag-overlay").css("font-size","3.5em");
+                $(".hashtag-overlay").css("top","2.5em");
+                $(".hashtag-overlay").css("letter-spacing","0");
+            }else {
+                $(".hashtag-overlay").css("font-size","7em");
+                $(".hashtag-overlay").css("top","1em");
+            }
+
+
             $scope.tweet = tweets[currentPosition];
             $scope.tweetText = removeEmojis(tweets[currentPosition].text);
             $scope.tweetDate = moment(tweets[currentPosition].created_at).format('LL');
@@ -1532,45 +1843,49 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
             $scope.nextTweet = tweets[nextTweetPosition];
             $scope.nextTweetText = removeEmojis(tweets[nextTweetPosition].text);
             $scope.nextTweetDate = moment(tweets[nextTweetPosition].created_at).format('LL');
+
+            $scope.name = removeEmojis(tweets[currentPosition].user.name);
+            $scope.username = removeEmojis(tweets[currentPosition].user.screen_name);
+
             
 //            $scope.$apply();
             
             changePosition(currentPosition,tweetsCount);
-            
-            if ($scope.topHashtag.length > 13) {
-                $(".hashtag-overlay").css("font-size","3.6em");
-                $(".hashtag-overlay").css("top","2.4em");
-                $(".hashtag-overlay").css("letter-spacing","0");
-            }else {
-                $(".hashtag-overlay").css("font-size","7em");
-                $(".hashtag-overlay").css("top","1em");
-            }
+            // checkIfDataEnds();
         
         }
+
+            
+
         
         if (config.loop) {
-            
-            
-            
-              var interval7 = setInterval(function () {
 
-                  $("#currentTweet").delay(2000).removeClass("bounceInUp");
-                  $("#secondTweet").delay(2000).removeClass("slideInUp");
-    
+              var interval7 = setInterval(function () {
+                  twitterRemoveClass();
                 }, config.loopInterval/2);
 
             
               var interval8 = setInterval(function () {
-                  
-                    $scope.$apply(function () {
-                        insertToScope();
+
+                  $scope.$apply(function(){
+                    inserDataToScope();
+                    twitterAddClass();
                     });
-                  
-                  $("#currentTweet").addClass("bounceInUp");
-                  $("#secondTweet").addClass("slideInUp");
-    
+                    
                 }, config.loopInterval);
             
+        }
+        
+
+        function twitterRemoveClass(){
+              $(".twitter #currentTweet").delay(2000).removeClass("bounceInUp");
+              $(".twitter #secondTweet").delay(2000).removeClass("slideInUp");
+        }
+
+
+        function twitterAddClass(){
+                $(".twitter #currentTweet").addClass("bounceInUp");
+                $(".twitter #secondTweet").addClass("slideInUp");
         }
         
         function removeSpace(topHashtag) {
@@ -1587,18 +1902,23 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
               if (currentPosition >= tweetsCount) {
                   currentPosition = 0;
-                  localStorage.setItem('tweetPosition', currentPosition);
+                  localStorage.setItem('twitter-position', currentPosition);
+                  localStorage.setItem('twitter-counter',twitterCounter);
+                  currentHashtag();
               } else {
                   currentPosition++;
-                  localStorage.setItem('tweetPosition', currentPosition);
+                  localStorage.setItem('twitter-position', currentPosition);
+                  localStorage.setItem('twitter-counter', twitterCounter);
               }
             
             return currentPosition;
 
           }
         
-        function removeEmojis(text) {
-            return text.replace(/🎁/g,'');
+    function removeEmojis (string) {
+          var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c[\ude01\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c[\ude32\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|[\ud83c[\ude50\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
+
+          return string.replace(regex, '');
         }
 
 
@@ -1607,8 +1927,8 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 		clearInterval(interval8);
 	}
 
-    $timeout(removeInterval, 29000);   
-    $timeout(callback, 30000);
+    $timeout(removeInterval, 58000);   
+    $timeout(callback, 60000);
 
 
 };
@@ -1616,10 +1936,10 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){ 
 
-    var config = {
+     var config = {
         'loop':'true',
         'loopInterval': 10000,
-        'animationEnter': 'flipInY',
+        'animationEnter': 'flipInX',
         'animationOut' : 'flipOutX'
     }
     
@@ -1627,7 +1947,7 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
     var hugotList = [
         "Sabi ko na nga ba sabon ka! Kasi I'm SOAPer in love with you!",
         "Sana gravity nalang ako para kahit lumayo ka babalik at babalik ka din sa akin.",
-        "dont waste your time to the person who dosen't even cares to your feelings.",
+        "Don't waste your time to the person who doesn't even cares to your feelings.",
         "Kung dalawa ang mahal mo, piliin mo yung pangalawa.. kasi, hindi ka naman magmamahal ng iba kung mahal mo talaga yung una.",
         "Sa Tindi ng Trapik sa EDSA, naniniwala na ako sa FOREVER.",
         "Ang Paglalakbay natin sa buhay ay tulad sa batas trapiko. Alam natin kung kailan maghahanda, ititigil at magpapatuloy, higit sa lahat ng sumusunod sa batas.",
@@ -1663,6 +1983,7 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
         function insertDataToScope() {
             
              $scope.hugotText = hugotList[makeUniqueRandom()];
+
              
         }
         
@@ -1672,18 +1993,27 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
             insertDataToScope();
     
             var interval5 = setInterval(function(){
-                $(".hugot-text").delay(2000).removeClass(config.animationEnter);
+                hugotRemoveClass();
             },config.loopInterval/2);
 
             var interval6 = setInterval(function(){
 
                 insertDataToScope();
-                $scope.$apply();    
-                $(".hugot-text").addClass(config.animationEnter);
+                hugotAddClass();
+                $scope.$apply();
 
             },config.loopInterval);
     
         }
+
+        function hugotRemoveClass(){
+            $(".hugot-text").delay(2000).removeClass(config.animationEnter);
+        }
+
+        function hugotAddClass(){
+            $(".hugot-text").addClass(config.animationEnter);
+        }
+       
 
 
 
@@ -1693,7 +2023,208 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
 		clearInterval(interval6);
 	}
 
-    $timeout(removeInterval, 19000);   
-    $timeout(callback, 20000);
+    $timeout(removeInterval, 29000);   
+    $timeout(callback, 30000);
+
+};
+
+
+function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){ 
+
+
+  var filter = ["now_playing","upcoming","popular","top_rated"];
+    var size= ["w92", "w154", "w185", "w342", "w500", "w780", "original"]
+    var config = {
+    	"filter": filter[1],
+    	"posterSize": size[4],
+    	"backgroundSize": size[5],
+    	"loop": true,
+    	"loopInterval": 10000,
+    	"animation": "flipInX"
+    }
+
+    var temp, movieData;
+
+    var currentPosition = parseInt(localStorage.getItem('movie-position')) || 0;
+    var moviesLength = 0;
+    var movies; 
+
+    config.url = "https://api.themoviedb.org/3/movie/"+config.filter+"?api_key=f2ebc8131c456f6ee2f134ac299aa40f&language=en&US";
+
+    if (config.filter == "now_playing") {
+    	$scope.movieslist = "Movies in Cinemas";
+    }else if(config.filter == "upcoming"){
+    	$scope.movieslist = "Latest Movies";
+    }else if(config.filter == "popular"){
+    	$scope.movieslist = "Popular Movies";
+    }else if (config.filter == "top_rated"){
+    	$scope.movieslist = "Top Rated Movies";
+    }else{
+    	$scope.movieslist = "Latest Movies";
+    }
+
+
+      function checkIfMovieDataExpired(){
+
+                var currentTimeStamp = moment().unix();
+
+                if (localStorage.getItem('movie-expiration-date') == null) {
+
+                    getDataFromApi();
+                
+                }else{
+
+                  if(localStorage.getItem('movie-expiration-date') >= currentTimeStamp) {
+                    console.log("Movie data is still good and data is still within 4 hours.");
+                    console.log("Getting data from the local storage");
+
+                    if (localStorage.getItem('movie') == null || localStorage.getItem('movie') == '') {
+                      console.log("data is not good, getting data from the api");
+                      getDataFromApi();
+                    }
+
+                    getDataFromStorage();
+
+                  }else{
+
+                    getDataFromApi();
+
+
+                  }
+
+                }
+
+              } // end of the checkIfMovieDataExpired function
+
+
+    checkIfMovieDataExpired();
+
+    function getDataFromApi() {
+
+          console.log("fetch data from themoviedb api");
+
+
+          $http.get(config.url)
+              .then(function(response) {
+
+                  var currentTimeStamp = moment().unix() + 259200;
+
+                  if (response.data) {
+                      localStorage.setItem('movie-expiration-date',currentTimeStamp);
+                      localStorage.setItem('movie',JSON.stringify(response.data));
+                      localStorage.setItem('movie-position',0);
+                      console.log("fetch data from the local storage");
+                      getDataFromStorage();
+                  } else {
+                      console.log("nothing returned");
+                  }
+              })
+              .catch(function() {
+                  // handle error
+                  console.log('error occurred');
+                  if (localStorage.getItem('movie') != null && localStorage.getItem('movie') != '') {
+                    console.log("fetch data from the local storage");
+                    getDataFromStorage();
+                  }else{
+                    getDataFromApi();
+                  }
+              })
+
+      }
+
+
+       function getDataFromStorage() {
+
+          
+          temp = localStorage.getItem('movie');
+          movieData = JSON.parse(temp);
+          movies = movieData.results;
+          moviesLength = movies.length;
+          inserDataToScope();
+      }
+
+
+    function inserDataToScope(){
+
+        var result = movies[currentPosition];
+
+        if (result.overview.length > 400) {
+            $(".movie-description p").css("font-size",".6em");
+        }else{
+            $(".movie-description p").css("font-size",".7em");
+        }
+
+        console.log("Movie position: " + currentPosition + "/" + moviesLength);
+
+        $scope.title = result.original_title;
+        $scope.description = result.overview;
+        $scope.vote_average = "Ratings: " + result.vote_average + " / 10";
+        $scope.release_date = "Release Date: " + moment(result.release_date).format('LL');
+        $scope.poster_path = "http://image.tmdb.org/t/p/"+config.posterSize+"/"+result.poster_path;
+        $scope.backdrop_path = "http://image.tmdb.org/t/p/"+config.backgroundSize+"/"+result.backdrop_path;
+        $scope.animation = config.animation;
+
+
+    }
+
+    function changeMovie(){
+    	
+	       if ((currentPosition+1) >= moviesLength) {
+              currentPosition = 0;
+              localStorage.setItem('movie-position',currentPosition);
+              console.log('setting data ' , currentPosition);
+              inserDataToScope();
+          } else {
+              currentPosition++;
+              localStorage.setItem('movie-position',currentPosition);
+              console.log('setting data ' , currentPosition);
+              inserDataToScope();
+          }
+
+    }
+
+    function movieRemoveClass(){
+		$(".movie-poster").delay(2000).removeClass("bounceInDown");   
+        $(".movie-title").delay(2000).removeClass(config.animation);   
+        $(".movie-release-date").delay(2000).removeClass(config.animation);   
+        $(".movie-description").delay(2000).removeClass(config.animation);   
+        $(".movie-ratings").delay(2000).removeClass(config.animation);   
+        $(".movie-logo").delay(2000).removeClass("fadeInUp");   
+    }
+
+    function movieAddClass(){
+		$(".movie-poster").addClass("bounceInDown");
+        $(".movie-title").addClass(config.animation);
+        $(".movie-release-date").addClass(config.animation);
+        $(".movie-description").addClass(config.animation);
+        $(".movie-ratings").addClass(config.animation);
+        $(".movie-logo").addClass("fadeInUp");
+    }
+
+
+    if (config.loop) {
+
+	 var interval9 = setInterval(function () {
+	        movieRemoveClass();     
+	    }, config.loopInterval/2);
+
+	  var interval10 = setInterval(function () {
+	        changeMovie();
+	        movieAddClass();
+	        $scope.$apply();
+	    }, config.loopInterval);
+
+    }
+
+
+
+	function removeInterval() {
+		clearInterval(interval9);
+		clearInterval(interval10);
+	}
+
+    $timeout(removeInterval, 39000);   
+    $timeout(callback, 40000);
+
 
 };

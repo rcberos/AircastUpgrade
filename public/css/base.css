@@ -735,6 +735,7 @@
   height: 100vh;
   padding: 1.5em;
   font-size: 4vh;
+
 }
 .hugot .hugot-text-container {
   display: flex;
@@ -754,6 +755,7 @@
 .hugot .hugot-text {
   font-size: 2em;
   color: white;
+  font-weight: 400;
   text-shadow: 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.3);
   padding: 2em 2em;
   text-align: center;
@@ -763,3 +765,84 @@
 
 
 /*----------------end of hugot-----------------*/
+
+/*--------------------start of movies------------------*/
+
+.upcoming-movies {
+  width: 100vw;
+  height: 100vh;
+  font-size: 4vh;
+  color: white;
+  text-shadow: 0.1em 0.1em 0.1em rgba(0, 0, 0, .5);
+  font-family: 'Roboto';
+}
+.upcoming-movies .movie-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 30;
+  background: url('http://image.tmdb.org/t/p/w780//tcheoA2nPATCm2vvXw2hVQoaEFD.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(0.5em);
+  transform: scale(1.1);
+}
+.upcoming-movies .movie-logo {
+  position: absolute;
+  bottom: 1.5em;
+  right: 3em;
+  z-index: 40;
+}
+.upcoming-movies .movie-logo img {
+  width: 3.5em;
+}
+.upcoming-movies .movie-content {
+  position: relative;
+  z-index: 50;
+}
+.upcoming-movies .movie-left {
+  position: absolute;
+  left: 1em;
+}
+.upcoming-movies .movie-left .movie-poster {
+  margin-left: 2em;
+}
+.upcoming-movies .movie-left .movie-poster img {
+  width: 15em;
+  box-shadow: 0.1em 0.1em 2em rgba(0, 0, 0, .5);
+}
+.upcoming-movies .movie-right {
+  position: absolute;
+  right: 1em;
+  width: 50vw;
+  padding-right: 3em;
+  top: 5em;
+  line-height: 1.3em;
+}
+.upcoming-movies .movie-right h1 {
+  font-size: 1.8em;
+  margin-bottom: 0.8em;
+  line-height: 1em;
+  padding-right: 1em;
+}
+.upcoming-movies .movie-right h2 {
+  font-size: 0.8em;
+}
+.upcoming-movies .movie-right h3 {
+  margin-bottom: 1em;
+  font-size: 1.5em;
+}
+.upcoming-movies .movie-right p {
+  font-size: 0.8em;
+  font-style: italic;
+  line-height: 1.4em;
+  margin-bottom: 1.8em;
+}
+.upcoming-movies .movie-right .fa {
+  margin-right: 0.5em;
+}
+
+
+/*-----------------------end of movies--------------------*/
