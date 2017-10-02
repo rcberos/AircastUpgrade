@@ -33,6 +33,9 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   $scope.demoState = 0;
   
 
+  var yesterday = new Date((Date.now()) - 86400000);
+  console.log('yesterday: '+Date.now());
+
   $scope.mainDiv = {
     "position": "absolute",
     "top":      "0px",
@@ -41,6 +44,9 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     "height":   $window.innerHeight+"px",
     "background-color": "black"
   }
+
+
+  $scope.TemplateData = [];
 
 
   $scope.templates = [];
@@ -64,119 +70,119 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
 
 
-  
+
   //news
-  var payload = {
-    CampaignID: 2,
-    tempHtml: 'templates/temp10.html',
-    tempSrc: {
-                video: "assets/audition.mp4",
-                side1: "assets/side1.jpg",
-                side2: "assets/side1.jpg",
-                side3: "assets/side1.jpg",
-                bottom: "assets/bottom.jpg",
-              },
-    tempJs: 'scripts/temp1.js',
-    tempInit: 'temp10Controller'
-  }
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp10.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp1.js',
+  //   tempInit: 'temp10Controller'
+  // }
 
 
-  $scope.templates.push(payload);
+  // $scope.templates.push(payload);
 
 
   //nearby-restaurant
-  var payload = {
-    CampaignID: 2,
-    tempHtml: 'templates/temp11.html',
-    tempSrc: {
-                video: "assets/audition.mp4",
-                side1: "assets/side1.jpg",
-                side2: "assets/side1.jpg",
-                side3: "assets/side1.jpg",
-                bottom: "assets/bottom.jpg",
-              },
-    tempJs: 'scripts/temp1.js',
-    tempInit: 'temp11Controller'
-  }
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp11.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp1.js',
+  //   tempInit: 'temp11Controller'
+  // }
 
 
-  $scope.templates.push(payload);
+  // $scope.templates.push(payload);
 
-  //weather
-  var payload = {
-    CampaignID: 2,
-    tempHtml: 'templates/temp12.html',
-    tempSrc: {
-                video: "assets/audition.mp4",
-                side1: "assets/side1.jpg",
-                side2: "assets/side1.jpg",
-                side3: "assets/side1.jpg",
-                bottom: "assets/bottom.jpg",
-              },
-    tempJs: 'scripts/temp1.js',
-    tempInit: 'temp12Controller'
-  }
-
-
-  $scope.templates.push(payload);
+  // //weather
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp12.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp1.js',
+  //   tempInit: 'temp12Controller'
+  // }
 
 
-  //currency
-  var payload = {
-    CampaignID: 2,
-    tempHtml: 'templates/temp13.html',
-    tempSrc: {
-                video: "assets/audition.mp4",
-                side1: "assets/side1.jpg",
-                side2: "assets/side1.jpg",
-                side3: "assets/side1.jpg",
-                bottom: "assets/bottom.jpg",
-              },
-    tempJs: 'scripts/temp1.js',
-    tempInit: 'temp13Controller'
-  }
+  // $scope.templates.push(payload);
 
 
-  $scope.templates.push(payload);
-
-  //twitter
-  var payload = {
-    CampaignID: 2,
-    tempHtml: 'templates/temp14.html',
-    tempSrc: {
-                video: "assets/audition.mp4",
-                side1: "assets/side1.jpg",
-                side2: "assets/side1.jpg",
-                side3: "assets/side1.jpg",
-                bottom: "assets/bottom.jpg",
-              },
-    tempJs: 'scripts/temp1.js',
-    tempInit: 'temp14Controller'
-  }
+  // //currency
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp13.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp1.js',
+  //   tempInit: 'temp13Controller'
+  // }
 
 
-  $scope.templates.push(payload);
+  // $scope.templates.push(payload);
 
-  //hugot
-  var payload = {
-    CampaignID: 2,
-    tempHtml: 'templates/temp15.html',
-    tempSrc: {
-                video: "assets/audition.mp4",
-                side1: "assets/side1.jpg",
-                side2: "assets/side1.jpg",
-                side3: "assets/side1.jpg",
-                bottom: "assets/bottom.jpg",
-              },
-    tempJs: 'scripts/temp1.js',
-    tempInit: 'temp15Controller'
-  }
-
-
-  $scope.templates.push(payload);
+  // //twitter
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp14.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp1.js',
+  //   tempInit: 'temp14Controller'
+  // }
 
 
-  
+  // $scope.templates.push(payload);
+
+  // //hugot
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp15.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp1.js',
+  //   tempInit: 'temp15Controller'
+  // }
+
+
+  // $scope.templates.push(payload);
+
+
+
 
   
 
@@ -274,6 +280,9 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
         }
         else if(state == 1){
           $http.post('http://54.254.248.115/rpiGetCampaigns', data).then(function(response){
+            console.log('Template Data');
+            console.log($scope.TemplateData);
+
             var newTemplates = response.data;
             console.log(newTemplates);
             console.log('temp');
@@ -299,6 +308,9 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
               // console.log('i: '+i);
               // console.log($scope.templates);
             }
+
+
+
             // console.log('mid temp');
             // console.log($scope.templates);
             for(var i=0; i<newTemplates.length; i++){
@@ -311,8 +323,36 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
                 }
               }
               if(!wasInside){
+
+                if(newTemplates[i].needTempData){
+                  var hasTempData = false;
+                  for(var j=0; j < $scope.TemplateData.length; j++){
+                    if($scope.TemplateData[j].Template == newTemplates[i].Template){
+                      hasTempData = true;
+                      break;
+                    }
+                  }
+
+                  if(!hasTempData){
+                    var dummyTemp = {
+                      Template: newTemplates[i].Template,
+                      hasData: false
+                    }
+
+                    $scope.TemplateData.push(dummyTemp);
+                  }
+
+                  for(var j=0; j < $scope.TemplateData.length; j++){
+                    if($scope.TemplateData[j].Template == newTemplates[i].Template && $scope.TemplateData[j].hasData == true){
+                      $scope.templates.unshift(newTemplates[i]);
+                    }
+                  }
+                }
+                else{
+                  $scope.templates.unshift(newTemplates[i]);
+                }
                 // console.log('inserted');
-                $scope.templates.unshift(newTemplates[i]);
+                // $scope.templates.unshift(newTemplates[i]);
               }
               // else
               //   console.log('not inserted');
@@ -363,6 +403,21 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
 
   $interval(function(){$scope.getTemplates();}, 5000);
+
+
+  function getTempData(){
+    var payl = [$http, $scope];
+
+    window['temp10GetData'].apply(null, payl);
+    window['temp11GetData'].apply(null, payl);
+    window['temp12GetData'].apply(null, payl);
+    window['temp13GetData'].apply(null, payl);
+    window['temp14GetData'].apply(null, payl);
+    window['temp15GetData'].apply(null, payl);
+  }
+
+  getTempData();
+  $interval(function(){getTempData();}, 10000);
 
 
 

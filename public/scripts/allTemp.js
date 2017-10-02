@@ -695,6 +695,8 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
     var loopCounter = 0;
     var interval1, interval2;
+
+    var localData;
             
     var config = {
 
@@ -763,7 +765,14 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
         } // end of the checkIfNewsDataExpired function
 
         
-    checkIfNewsDataExpired();
+        for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp10'){
+    			localData = $scope.TemplateData[i].TempData;
+    			insertDataToScope();
+    		}
+    	}
+
+    // checkIfNewsDataExpired();
 
         
 
@@ -807,11 +816,13 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
           //insert all the data to the angular $scope
       function insertDataToScope() {
-          
+          console.log('temp 10 data insert');
           $(".news-loader").fadeOut("slow",function(){
   
-              var x = localStorage.getItem('news');
-              var parsedData = JSON.parse(x);
+              // var x = localStorage.getItem('news');
+              var x = localData;
+              // var parsedData = JSON.parse(x);
+              var parsedData = localData;
 
               //check if data is empty
               if (parsedData == '') {
@@ -1007,6 +1018,9 @@ function UpdateWallet($http, CampaignID){
     });
 }
 
+
+
+
 function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
       
 /*        sample data
@@ -1060,10 +1074,19 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
         starWidth: "50px",
     });
 
+    	for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp11'){
+    			restaurantData = $scope.TemplateData[i].TempData;
+    			insertDataToScope();
+    		}
+    	}
+    	
 
       function checkIfRestaurantDataExpired(){
 
           var currentTimeStamp = moment().unix();
+
+
 
           if (localStorage.getItem('restaurant-expiration-date') == null) {
 
@@ -1093,7 +1116,8 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
         } // end of the checkIfNewsDataExpired function
 
-        checkIfRestaurantDataExpired();
+        // fetchRestaurantData(config.url);
+        // checkIfRestaurantDataExpired();
 
         function fetchRestaurantData(url){
 
@@ -1103,6 +1127,8 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
               .then(function(response) {
 
                   if (response.data) {
+                  	console.log('resto');
+                  	console.log(response.data);
 
                     var restaurants = response.data.nearby_restaurants;
 
@@ -1170,7 +1196,7 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
           temp = localStorage.getItem('restaurant');
           restaurantData = JSON.parse(temp);
-          console.log(restaurantData);
+          console.log(JSON.stringify(restaurantData));
           // localStorage.setItem('restaurant-position',0);
 
           insertDataToScope();
@@ -1352,40 +1378,59 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
     $timeout(removeInterval2, 58000);      
 	$timeout(callback, 60000);
 
+	// fetchRestaurantData(config.url);
+
 }
 
 function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $q){ 
 
     var today = moment().format('MMM. DD, YYYY');
- 
-    weather = function() {
-        var d = $q.defer();
-        $http({
-          method : 'GET',
-          url: 'http://api.openweathermap.org/data/2.5/forecast/daily?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67&q=Manila&cnt=7',
-          withCredentials: false,
-          headers: { 'Content-Type': 'application/json' }
-        }).then(function(data){
-          d.resolve(data);
-        }, function(err) {
-        	d.reject('error');
-        });
 
-        return d.promise;
+    var data1, data2;
+ 
+    for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp12'){
+    			data1 = $scope.TemplateData[i].TempData[0];
+    			data2 = $scope.TemplateData[i].TempData[1];
+
+    			console.log('alltemp12data');
+    			console.log($scope.TemplateData[i].TempData);
+    			// insertDataToScope();
+    		}
+    	}
+
+    weather = function() {
+        // var d = $q.defer();
+        // $http({
+        //   method : 'GET',
+        //   url: 'http://api.openweathermap.org/data/2.5/forecast/daily?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67&q=Manila&cnt=7',
+        //   withCredentials: false,
+        //   headers: { 'Content-Type': 'application/json' }
+        // }).then(function(data){
+        //   d.resolve(data);
+        // }, function(err) {
+        // 	d.reject('error');
+        // });
+
+        // return d.promise;
+
+        return data1;
     }
 
     weather_now = function() {
-        var d = $q.defer();
-        $http({
-          method : 'GET',
-          url: 'http://api.openweathermap.org/data/2.5/weather?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67',
-          withCredentials: false,
-          headers: { 'Content-Type': 'application/json' }
-        }).then(function(data){
-          d.resolve(data);
-        });
+        // var d = $q.defer();
+        // $http({
+        //   method : 'GET',
+        //   url: 'http://api.openweathermap.org/data/2.5/weather?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67',
+        //   withCredentials: false,
+        //   headers: { 'Content-Type': 'application/json' }
+        // }).then(function(data){
+        //   d.resolve(data);
+        // });
 
-        return d.promise;
+        // return d.promise;
+
+        return data2;
     }
 
     function getGreetingTime (m) {
@@ -1432,69 +1477,70 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
       }
     }
 
-    weather().then(function(d){
+    // weather().then(function(d){
 
+    	var d = data1;
     	if (d == 'error') {
     		 $(".weather-loader").fadeOut("slow");
     		callback();   
     	}else {
 
-		      now = weather_now().then(function(data){
-		        now_w = {}
-		        now_w["temp"] =  data.data.main.temp - 273.15
-		        now_w["description"] = data.data.weather[0].description
-		        now_w["weather"] = data.data.weather[0].main
-		        now_w["greeting"] = getGreetingTime(moment(data.data.dt*1000))
-		        now_w["icon"] = get_icon(now_w["weather"], now_w["greeting"])
-		        now_w["currentDate"] = today
-		        now_w["location"] = data.data.name
+		      // now = weather_now().then(function(data){
+		      //   now_w = {}
+		      //   now_w["temp"] =  data.data.main.temp - 273.15
+		      //   now_w["description"] = data.data.weather[0].description
+		      //   now_w["weather"] = data.data.weather[0].main
+		      //   now_w["greeting"] = getGreetingTime(moment(data.data.dt*1000))
+		      //   now_w["icon"] = get_icon(now_w["weather"], now_w["greeting"])
+		      //   now_w["currentDate"] = today
+		      //   now_w["location"] = data.data.name
 
-		        $(".weather-loader").fadeOut("slow",function(){
-		            $(".weather").fadeIn(); 
-		        });
+		      //   $(".weather-loader").fadeOut("slow",function(){
+		      //       $(".weather").fadeIn(); 
+		      //   });
 
-		        console.log(now_w.weather);
+		      //   console.log(now_w.weather);
 
-		        if (now_w.weather == 'Rain') {
-		          $scope.weather_background = "/assets/weather-rainy.png";
-		        }else{
-		          $scope.weather_background = "/assets/weather-sunny.jpg";
-		        }
+		      //   if (now_w.weather == 'Rain') {
+		      //     $scope.weather_background = "/assets/weather-rainy.png";
+		      //   }else{
+		      //     $scope.weather_background = "/assets/weather-sunny.jpg";
+		      //   }
 		          
-		        if (now_w["icon"] === 'icon-sun') {
-		             now_w["animation"] = 'rotateInfinite' + ' ' + now_w["icon"];
-		        }else {
-		             now_w["animation"] = 'leftToRight' + ' ' + now_w["icon"];
-		        }
+		      //   if (now_w["icon"] === 'icon-sun') {
+		      //        now_w["animation"] = 'rotateInfinite' + ' ' + now_w["icon"];
+		      //   }else {
+		      //        now_w["animation"] = 'leftToRight' + ' ' + now_w["icon"];
+		      //   }
 		        
-		        $scope.now_weather = now_w
+		      //   $scope.now_weather = now_w
 
-		      })
-
-
-		      conditions = []
-		      _.each(d.data.list, function(v) {
-		        x = {}
-
-		        x["temp"] = v.temp.day - 273.15
-		        x["day"] = moment(v.dt*1000).format('dddd')
-		        x["weather"] = v.weather[0].main
-		        x["greeting"] = getGreetingTime(moment(v.dt*1000))
-		        x["icon"] = get_icon(x["weather"], x["greeting"])
+		      // })
 
 
-		        conditions.push(x)
-		      })
+		      // conditions = []
+		      // _.each(d.data.list, function(v) {
+		      //   x = {}
 
-		      $scope.conditions = conditions
+		      //   x["temp"] = v.temp.day - 273.15
+		      //   x["day"] = moment(v.dt*1000).format('dddd')
+		      //   x["weather"] = v.weather[0].main
+		      //   x["greeting"] = getGreetingTime(moment(v.dt*1000))
+		      //   x["icon"] = get_icon(x["weather"], x["greeting"])
 
-		      $scope.now = moment().format('MMMM DD ddd');
+
+		      //   conditions.push(x)
+		      // })
+
+		      // $scope.conditions = conditions
+
+		      // $scope.now = moment().format('MMMM DD ddd');
 
 
     	}
 
 
-    });
+    // });
 
 	$timeout(callback, 15000);
 
@@ -1747,7 +1793,15 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
             
         }
         
-        checkIfCurrencyDataExpired();
+        for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp13'){
+    			currencyData = $scope.TemplateData[i].TempData;
+    			// insertDataToScope();
+    			inserDataToScope(currencyData);
+    		}
+    	}
+
+        // checkIfCurrencyDataExpired();
 
         $timeout(callback, 15000);
         
@@ -1766,7 +1820,8 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
         var loopCounter = 0;
-        var twitterCounter =  parseInt(localStorage.getItem('twitter-counter')) || 0;
+        // var twitterCounter =  parseInt(localStorage.getItem('twitter-counter')) || 0;
+        var twitterCounter = 0;
         var temp, twitterData, hashtagList;
         var interval7, interval8;
 
@@ -1804,7 +1859,9 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
               } // end of the checkIfNewsDataExpired function
 
 
-        checkIfTwitterDataExpired();
+       
+
+        // checkIfTwitterDataExpired();
 
          function getDataFromApi() {
 
@@ -1873,7 +1930,8 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
       function inserDataToScope(){
 
 
-            var tweets = twitterData[twitterCounter].statuses;
+            // var tweets = twitterData[twitterCounter].statuses;
+            var tweets = twitterData;
             var tweetsCount  = tweets.length-1;
             var currentPosition = localStorage.getItem('twitter-position') || 0;
             var nextTweetPosition = (currentPosition < tweetsCount)? parseInt(currentPosition)+1 : 0;
@@ -1998,6 +2056,22 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 	}
 
+	for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp14'){
+    			twitterData = $scope.TemplateData[i].TempData.status.statuses;
+
+    			hashtagList = twitterData.pop();
+
+		          // localStorage.setItem('twitter-position',0);
+		          // localStorage.setItem('twitter-counter',0);
+		          $(".twitter .loader").fadeOut("slow");
+		          inserDataToScope();
+
+    			 // inserDataToScope();
+    			// inserDataToScope(currencyData);
+    		}
+    	}
+
     $timeout(removeInterval, 58000);   
     $timeout(callback, 60000);
 
@@ -2032,6 +2106,14 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
         "In a relationship, no matter how carefully you hold the one.. Yet you have lost it.. Because he had released the hold earlier.",
         
     ]
+
+    // for(var i=0; i< $scope.TemplateData.length; i++){
+    // 		if($scope.TemplateData[i].Template == 'temp15'){
+    // 			hugotList = $scope.TemplateData[i].TempData;
+    // 			console.log(hugotList);
+    // 		}
+    // 	}
+
     
     var uniqueRandoms = [];
     var numRandoms = hugotList.length;
@@ -2111,6 +2193,8 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
 	}
+
+	insertDataToScope();
 
     $timeout(removeInterval, 29000);   
     $timeout(callback, 30000);
