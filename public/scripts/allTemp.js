@@ -1400,37 +1400,37 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
     	}
 
     weather = function() {
-        // var d = $q.defer();
-        // $http({
-        //   method : 'GET',
-        //   url: 'http://api.openweathermap.org/data/2.5/forecast/daily?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67&q=Manila&cnt=7',
-        //   withCredentials: false,
-        //   headers: { 'Content-Type': 'application/json' }
-        // }).then(function(data){
-        //   d.resolve(data);
-        // }, function(err) {
-        // 	d.reject('error');
-        // });
+        var d = $q.defer();
+        $http({
+          method : 'GET',
+          url: 'http://api.openweathermap.org/data/2.5/forecast/daily?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67&q=Manila&cnt=7',
+          withCredentials: false,
+          headers: { 'Content-Type': 'application/json' }
+        }).then(function(data){
+          d.resolve(data);
+        }, function(err) {
+        	d.reject('error');
+        });
 
-        // return d.promise;
+        return d.promise;
 
-        return data1;
+        // return data1;
     }
 
     weather_now = function() {
-        // var d = $q.defer();
-        // $http({
-        //   method : 'GET',
-        //   url: 'http://api.openweathermap.org/data/2.5/weather?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67',
-        //   withCredentials: false,
-        //   headers: { 'Content-Type': 'application/json' }
-        // }).then(function(data){
-        //   d.resolve(data);
-        // });
+        var d = $q.defer();
+        $http({
+          method : 'GET',
+          url: 'http://api.openweathermap.org/data/2.5/weather?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67',
+          withCredentials: false,
+          headers: { 'Content-Type': 'application/json' }
+        }).then(function(data){
+          d.resolve(data);
+        });
 
-        // return d.promise;
+        return d.promise;
 
-        return data2;
+        // return data2;
     }
 
     function getGreetingTime (m) {
@@ -1477,70 +1477,70 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
       }
     }
 
-    // weather().then(function(d){
+    weather().then(function(d){
 
-    	var d = data1;
+    	// var d = data1;
     	if (d == 'error') {
     		 $(".weather-loader").fadeOut("slow");
     		callback();   
     	}else {
 
-		      // now = weather_now().then(function(data){
-		      //   now_w = {}
-		      //   now_w["temp"] =  data.data.main.temp - 273.15
-		      //   now_w["description"] = data.data.weather[0].description
-		      //   now_w["weather"] = data.data.weather[0].main
-		      //   now_w["greeting"] = getGreetingTime(moment(data.data.dt*1000))
-		      //   now_w["icon"] = get_icon(now_w["weather"], now_w["greeting"])
-		      //   now_w["currentDate"] = today
-		      //   now_w["location"] = data.data.name
+		      now = weather_now().then(function(data){
+		        now_w = {}
+		        now_w["temp"] =  data.data.main.temp - 273.15
+		        now_w["description"] = data.data.weather[0].description
+		        now_w["weather"] = data.data.weather[0].main
+		        now_w["greeting"] = getGreetingTime(moment(data.data.dt*1000))
+		        now_w["icon"] = get_icon(now_w["weather"], now_w["greeting"])
+		        now_w["currentDate"] = today
+		        now_w["location"] = data.data.name
 
-		      //   $(".weather-loader").fadeOut("slow",function(){
-		      //       $(".weather").fadeIn(); 
-		      //   });
+		        $(".weather-loader").fadeOut("slow",function(){
+		            $(".weather").fadeIn(); 
+		        });
 
-		      //   console.log(now_w.weather);
+		        console.log(now_w.weather);
 
-		      //   if (now_w.weather == 'Rain') {
-		      //     $scope.weather_background = "/assets/weather-rainy.png";
-		      //   }else{
-		      //     $scope.weather_background = "/assets/weather-sunny.jpg";
-		      //   }
+		        if (now_w.weather == 'Rain') {
+		          $scope.weather_background = "/assets/weather-rainy.png";
+		        }else{
+		          $scope.weather_background = "/assets/weather-sunny.jpg";
+		        }
 		          
-		      //   if (now_w["icon"] === 'icon-sun') {
-		      //        now_w["animation"] = 'rotateInfinite' + ' ' + now_w["icon"];
-		      //   }else {
-		      //        now_w["animation"] = 'leftToRight' + ' ' + now_w["icon"];
-		      //   }
+		        if (now_w["icon"] === 'icon-sun') {
+		             now_w["animation"] = 'rotateInfinite' + ' ' + now_w["icon"];
+		        }else {
+		             now_w["animation"] = 'leftToRight' + ' ' + now_w["icon"];
+		        }
 		        
-		      //   $scope.now_weather = now_w
+		        $scope.now_weather = now_w
 
-		      // })
-
-
-		      // conditions = []
-		      // _.each(d.data.list, function(v) {
-		      //   x = {}
-
-		      //   x["temp"] = v.temp.day - 273.15
-		      //   x["day"] = moment(v.dt*1000).format('dddd')
-		      //   x["weather"] = v.weather[0].main
-		      //   x["greeting"] = getGreetingTime(moment(v.dt*1000))
-		      //   x["icon"] = get_icon(x["weather"], x["greeting"])
+		      })
 
 
-		      //   conditions.push(x)
-		      // })
+		      conditions = []
+		      _.each(d.data.list, function(v) {
+		        x = {}
 
-		      // $scope.conditions = conditions
+		        x["temp"] = v.temp.day - 273.15
+		        x["day"] = moment(v.dt*1000).format('dddd')
+		        x["weather"] = v.weather[0].main
+		        x["greeting"] = getGreetingTime(moment(v.dt*1000))
+		        x["icon"] = get_icon(x["weather"], x["greeting"])
 
-		      // $scope.now = moment().format('MMMM DD ddd');
+
+		        conditions.push(x)
+		      })
+
+		      $scope.conditions = conditions
+
+		      $scope.now = moment().format('MMMM DD ddd');
 
 
     	}
 
 
-    // });
+    });
 
 	$timeout(callback, 15000);
 
