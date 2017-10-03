@@ -1820,13 +1820,17 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
         var loopCounter = 0;
-        // var twitterCounter =  parseInt(localStorage.getItem('twitter-counter')) || 0;
-        var twitterCounter = 0;
+        var twitterCounter =  parseInt(localStorage.getItem('twitter-counter')) || 0;
+        // var twitterCounter = 0;
         var temp, twitterData, hashtagList;
         var interval7, interval8;
 
+        var twitterPosition = 0;
+
 
        function checkIfTwitterDataExpired(){
+
+
 
                 var currentTimeStamp = moment().unix();
 
@@ -1860,7 +1864,7 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
        
-
+              // getDataFromApi();
         // checkIfTwitterDataExpired();
 
          function getDataFromApi() {
@@ -1871,6 +1875,7 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
           $http.get('/api/twitter')
               .then(function(response) {
 
+              		console.log("TWITTER");
                   console.log(response);
 
                   var currentTimeStamp = moment().unix() + 14400;
@@ -1880,7 +1885,7 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
                       localStorage.setItem('twitter',JSON.stringify(response.data));
                       localStorage.setItem('twitter-position',0);
                       console.log("fetch data from the local storage");
-                      location.reload();
+                      // location.reload();
                       getDataFromStorage();
                   } else {
                       console.log("nothing returned");
@@ -1931,13 +1936,14 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
             // var tweets = twitterData[twitterCounter].statuses;
-            var tweets = twitterData;
+            var tweets = twitterData.status.statuses;
             var tweetsCount  = tweets.length-1;
-            var currentPosition = localStorage.getItem('twitter-position') || 0;
-            var nextTweetPosition = (currentPosition < tweetsCount)? parseInt(currentPosition)+1 : 0;
+            var currentPosition = twitterPosition;
+            var nextTweetPosition = (currentPosition < tweetsCount)? currentPosition+1 : 0;
             console.log("Current Tweet Position: " + currentPosition +"/"+tweetsCount);
                 
-            $scope.topHashtag = removeSpace(hashtagList[twitterCounter]);
+            // $scope.topHashtag = removeSpace(hashtagList[twitterCounter]);
+            $scope.topHashtag = removeSpace(twitterData.status.topHastagToday);
             
             
             if ($scope.topHashtag.length > 15) {
@@ -1961,6 +1967,7 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
             $scope.name = removeEmojis(tweets[currentPosition].user.name);
             $scope.username = removeEmojis(tweets[currentPosition].user.screen_name);
+
 
             
 //            $scope.$apply();
@@ -2025,15 +2032,21 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
       function changePosition(currentPosition,tweetsCount) {
 
               if (currentPosition >= tweetsCount) {
-                  currentPosition = 0;
+                  twitterPosition = 0;
                   localStorage.setItem('twitter-position', currentPosition);
                   localStorage.setItem('twitter-counter',twitterCounter);
                   currentHashtag();
               } else {
-                  currentPosition++;
+                  twitterPosition++;
                   localStorage.setItem('twitter-position', currentPosition);
                   localStorage.setItem('twitter-counter', twitterCounter);
               }
+
+              $scope.TemplateData.forEach(function(item){
+					if(item.Template == 'temp14'){
+							item.lastTweet = twitterPosition
+			    		}
+				})
             
             return currentPosition;
 
@@ -2056,21 +2069,32 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 	}
 
-	for(var i=0; i< $scope.TemplateData.length; i++){
-    		if($scope.TemplateData[i].Template == 'temp14'){
-    			twitterData = $scope.TemplateData[i].TempData.status.statuses;
+	$scope.TemplateData.forEach(function(item){
+		if(item.Template == 'temp14'){
+    			twitterData = item.TempData;
+    			twitterPosition = item.lastTweet;
 
-    			hashtagList = twitterData.pop();
 
-		          // localStorage.setItem('twitter-position',0);
-		          // localStorage.setItem('twitter-counter',0);
 		          $(".twitter .loader").fadeOut("slow");
 		          inserDataToScope();
-
-    			 // inserDataToScope();
-    			// inserDataToScope(currencyData);
     		}
-    	}
+	})
+
+	// for(var i=0; i< $scope.TemplateData.length; i++){
+ //    		if($scope.TemplateData[i].Template == 'temp14'){
+ //    			twitterData = $scope.TemplateData[i].TempData;
+
+ //    			// hashtagList = twitterData.pop();
+
+	// 	          // localStorage.setItem('twitter-position',0);
+	// 	          // localStorage.setItem('twitter-counter',0);
+	// 	          $(".twitter .loader").fadeOut("slow");
+	// 	          inserDataToScope();
+
+ //    			 // inserDataToScope();
+ //    			// inserDataToScope(currencyData);
+ //    		}
+ //    	}
 
     $timeout(removeInterval, 58000);   
     $timeout(callback, 60000);
