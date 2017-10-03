@@ -32,7 +32,7 @@ function temp11GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
 		if(item.Template=='temp11'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
-			$http.get("https://developers.zomato.com/api/v2.1/geocode?lat=14.609695&long=121.0747", {
+			$http.get("https://developers.zomato.com/api/v2.1/geocode?lat=14.6297778&lon=121.027977", {
 		            headers : {
 		                'user-key': '1e3481187e26de091dfdb5f7f768312a',
 		                'Accept': 'application/json;odata=verbose'

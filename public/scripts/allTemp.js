@@ -1039,8 +1039,8 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
         
         
     var config = {
-        'lat': 14.609695,
-        'long': 121.0747,
+        'lat': 14.6297778,
+        'long': 121.027977,
         'loopStore': true,
         'loopInterval': 10000,
         'imgList': ['/assets/sample-image.jpg','/assets/one.jpeg','/assets/two.jpeg','/assets/three.jpeg','/assets/four.jpeg','/assets/five.jpeg'],
@@ -2113,30 +2113,32 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
     }
     var loopCounter = 0;
     var interval5, interval6;
+    var hugotList;
     
     
-    var hugotList = [
-        "Sabi ko na nga ba sabon ka! Kasi I'm SOAPer in love with you!",
-        "Sana gravity nalang ako para kahit lumayo ka babalik at babalik ka din sa akin.",
-        "Don't waste your time to the person who doesn't even cares to your feelings.",
-        "Kung dalawa ang mahal mo, piliin mo yung pangalawa.. kasi, hindi ka naman magmamahal ng iba kung mahal mo talaga yung una.",
-        "Sa Tindi ng Trapik sa EDSA, naniniwala na ako sa FOREVER.",
-        "Ang Paglalakbay natin sa buhay ay tulad sa batas trapiko. Alam natin kung kailan maghahanda, ititigil at magpapatuloy, higit sa lahat ng sumusunod sa batas.",
-        "Ang landian ay parang pagkain lang. Pag nasobrahan, nakakalaki ng tiyan.",
-        "Liliko ako kahit saan, Makarating lang sa Kinaroroonan mo.",
-        "Hintayin mo ang True Love mo. Na Traffic lang yun sa malalanding tao.",
-        "If you want to be part of my life, make sure that you are ready to accept not only the good parts but also my stupid side.",
-        "How can you love someone else. If you’re returning to the past.",
-        "In a relationship, no matter how carefully you hold the one.. Yet you have lost it.. Because he had released the hold earlier.",
+    // var hugotList = [
+    //     "Sabi ko na nga ba sabon ka! Kasi I'm SOAPer in love with you!",
+    //     "Sana gravity nalang ako para kahit lumayo ka babalik at babalik ka din sa akin.",
+    //     "Don't waste your time to the person who doesn't even cares to your feelings.",
+    //     "Kung dalawa ang mahal mo, piliin mo yung pangalawa.. kasi, hindi ka naman magmamahal ng iba kung mahal mo talaga yung una.",
+    //     "Sa Tindi ng Trapik sa EDSA, naniniwala na ako sa FOREVER.",
+    //     "Ang Paglalakbay natin sa buhay ay tulad sa batas trapiko. Alam natin kung kailan maghahanda, ititigil at magpapatuloy, higit sa lahat ng sumusunod sa batas.",
+    //     "Ang landian ay parang pagkain lang. Pag nasobrahan, nakakalaki ng tiyan.",
+    //     "Liliko ako kahit saan, Makarating lang sa Kinaroroonan mo.",
+    //     "Hintayin mo ang True Love mo. Na Traffic lang yun sa malalanding tao.",
+    //     "If you want to be part of my life, make sure that you are ready to accept not only the good parts but also my stupid side.",
+    //     "How can you love someone else. If you’re returning to the past.",
+    //     "In a relationship, no matter how carefully you hold the one.. Yet you have lost it.. Because he had released the hold earlier.",
         
-    ]
+    // ];
 
-    // for(var i=0; i< $scope.TemplateData.length; i++){
-    // 		if($scope.TemplateData[i].Template == 'temp15'){
-    // 			hugotList = $scope.TemplateData[i].TempData;
-    // 			console.log(hugotList);
-    // 		}
-    // 	}
+    console.log(hugotList);
+    for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp15'){
+    			hugotList = $scope.TemplateData[i].TempData;
+    			console.log(hugotList);
+    		}
+    	}
 
     
     var uniqueRandoms = [];
@@ -2151,6 +2153,7 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
             }
         }
         var index = Math.floor(Math.random() * uniqueRandoms.length);
+        console.log('index: '+index);
         var val = uniqueRandoms[index];
 
 
@@ -2162,6 +2165,15 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
         function insertDataToScope() {
             
              $scope.hugotText = hugotList[makeUniqueRandom()];
+
+              // $scope.hugotText = hugotList[0];
+
+              console.log($scope.hugotText);
+
+              if(!$scope.$$phase) {
+						$scope.$apply();
+					}
+
 
            	 if (loopCounter == 0) {
            	 	hugotloop();
@@ -2176,7 +2188,7 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 	         if (config.loop) {
 	            
-	            insertDataToScope();
+	            // insertDataToScope();
 	    
 	            interval5 = setInterval(function(){
 	                hugotRemoveClass();
@@ -2186,7 +2198,9 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 	                insertDataToScope();
 	                hugotAddClass();
-	                $scope.$apply();
+	                if(!$scope.$$phase) {
+						$scope.$apply();
+					}
 
 	            },config.loopInterval);
 	    
