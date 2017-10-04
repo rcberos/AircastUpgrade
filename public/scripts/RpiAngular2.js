@@ -68,6 +68,24 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   $scope.templates.push(payload);
 
 
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp20.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp1.js',
+  //   tempInit: 'temp20Controller'
+  // }
+
+
+  // $scope.templates.push(payload);
+
+
 
 
 
@@ -414,6 +432,14 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     window['temp13GetData'].apply(null, payl);
     window['temp14GetData'].apply(null, payl);
     window['temp15GetData'].apply(null, payl);
+
+
+    window['temp17GetData'].apply(null, payl);
+    window['temp18GetData'].apply(null, payl);
+    window['temp19GetData'].apply(null, payl);
+    window['temp20GetData'].apply(null, payl);
+    window['temp22GetData'].apply(null, payl);
+    window['temp23GetData'].apply(null, payl);
   }
 
   getTempData();
