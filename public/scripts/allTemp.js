@@ -4202,13 +4202,15 @@ function temp19Controller($scope, $window, $timeout, $http, tempSrc, callback, $
         
         // checkIfCurrencyDataExpired();
 
-        function callCallback() {
+        $timeout(callback, 15000);	
 
-		 if (cb) {
-	        	$timeout(callback, 15000);	
-	        }
+   //      function callCallback() {
+
+		 // if (cb) {
+	  //       	$timeout(callback, 15000);	
+	  //       }
         	
-        }
+   //      }
 
         
         
