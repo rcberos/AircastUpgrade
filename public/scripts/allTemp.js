@@ -2464,6 +2464,8 @@ function temp17Controller($scope, $window, $timeout, $http, temp2Src, callback, 
 	var loopCounter = 0;
     var cb = false;
     var interval1, interval2;
+
+    var localData;
             
     var config = {
 
@@ -2592,6 +2594,8 @@ function temp17Controller($scope, $window, $timeout, $http, temp2Src, callback, 
   
               var x = localStorage.getItem('news');
               var parsedData = JSON.parse(x);
+
+              var parsedData = localData;
 
               //check if data is empty
               if (parsedData == '') {
