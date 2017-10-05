@@ -60,36 +60,91 @@ var T = new Twit({
 
 
 //route to get data from twitter
+// app.get("/api/twitter",function(req,res){
+    
+//     T.get('trends/place', {id: '23424934'}, function(err,data,response){
+//         var trends = data[0]['trends'];
+//         var top = 0;
+//         var topHashtag,hashtagQuery;
+        
+//         for (var i=0; i < trends.length; i++) {
+//             var temp = trends[i].tweet_volume || 0;
+//             if (top <= temp) {
+//                 top = temp;
+//                 topHashtag = trends[i].name;
+//                 hashtagQuery = trends[i].query;
+//             }
+//         }
+//         console.log("\nTop Hastag: " + topHashtag);
+//         console.log("Tweet Volume: " + top);
+//         console.log("Query: " + hashtagQuery);
+//         getTweets(topHashtag);
+//     });
+    
+//     function getTweets(topHashtag) {
+        
+//         T.get('search/tweets', { q: topHashtag, lang: 'en', result_type: 'mixed', count: 100 }, function(err, data, response) {
+//             var status = data;
+//             status.topHastagToday = topHashtag;
+//             res.json({status});
+//         });
+//     }
+    
+// });
+
 app.get("/api/twitter",function(req,res){
-    
-    T.get('trends/place', {id: '23424934'}, function(err,data,response){
-        var trends = data[0]['trends'];
-        var top = 0;
-        var topHashtag,hashtagQuery;
-        
-        for (var i=0; i < trends.length; i++) {
-            var temp = trends[i].tweet_volume || 0;
-            if (top <= temp) {
-                top = temp;
-                topHashtag = trends[i].name;
-                hashtagQuery = trends[i].query;
-            }
-        }
-        console.log("\nTop Hastag: " + topHashtag);
-        console.log("Tweet Volume: " + top);
-        console.log("Query: " + hashtagQuery);
-        getTweets(topHashtag);
-    });
-    
-    function getTweets(topHashtag) {
-        
-        T.get('search/tweets', { q: topHashtag, lang: 'en', result_type: 'mixed', count: 100 }, function(err, data, response) {
-            var status = data;
-            status.topHastagToday = topHashtag;
-            res.json({status});
-        });
-    }
-    
+
+  
+
+          var tweetList = [];
+          var hashtagList = [];
+          var counter = 0;
+
+          function getTopHashtag(){
+
+              T.get('trends/place', {id: '23424934'}, function(err,data,response){
+
+                  if (!err) {
+                    
+                      var trends = data[0]['trends'];
+                      for (var i=0; i < 5; i++) {
+                          hashtagList.push(trends[i].name);
+                      }
+                      gatherTweets();
+                  }else {
+                    res.send(null);
+                  }
+                    
+                 });
+              
+          }
+          
+          
+          function getTweets(topHashtag) {
+              
+              T.get('search/tweets', { q: topHashtag+" exclude:retweets", lang: 'en', locale: 'fil', result_type: 'mixed', count: 25 }, function(err, data, response) {
+                  data.Hashtag = topHashtag;
+                  tweetList.push(data);
+                  console.log("added data to the list");  
+                  gatherTweets();       
+              });
+          }
+
+          function gatherTweets(){
+
+              if (counter < 5) {
+                  getTweets(hashtagList[counter]);
+                  console.log("getting tweets for position: " + counter);
+                  counter++;
+              }else{
+                  // tweetList.push(hashtagList);
+                  console.log("Trending Topics: ", hashtagList);
+                  res.json(tweetList);
+              }
+              
+          }
+
+          getTopHashtag();
 });
 
 

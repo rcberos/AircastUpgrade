@@ -51,7 +51,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
   $scope.templates = [];
 
-    var payload = {
+  var payload = {
     CampaignID: 2,
     tempHtml: 'templates/temp1.html',
     tempSrc: {
@@ -66,6 +66,23 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   }
 
   $scope.templates.push(payload);
+
+
+  // var payload = {
+  //   CampaignID: 2,
+  //   tempHtml: 'templates/temp6.html',
+  //   tempSrc: {
+  //               video: "assets/audition.mp4",
+  //               side1: "assets/side1.jpg",
+  //               side2: "assets/side1.jpg",
+  //               side3: "assets/side1.jpg",
+  //               bottom: "assets/bottom.jpg",
+  //             },
+  //   tempJs: 'scripts/temp6.js',
+  //   tempInit: 'temp6Controller'
+  // }
+
+  // $scope.templates.push(payload);
 
 
   // var payload = {
@@ -276,7 +293,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
       }
 
       $http.post('http://54.254.248.115/rpiGetState', data).then(function(response){
-        console.log(response.data);
+        // console.log(response.data);
 
         var state = response.data.State;
 
@@ -420,7 +437,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   }
 
 
-  $interval(function(){$scope.getTemplates();}, 5000);
+  
 
 
   function getTempData(){
@@ -444,6 +461,8 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
   getTempData();
   $interval(function(){getTempData();}, 10000);
+
+  $interval(function(){$scope.getTemplates();}, 5000);
 
 
 

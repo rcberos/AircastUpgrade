@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>Example - example-$route-service-production</title>
-
+<!-- 
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lora" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Khand:400,600" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  
+  <link rel="stylesheet" type="text/css" href="css/fonts.css">
 
   <link rel="stylesheet" type="text/css" href="css/symbolicon.css">
   <link rel="stylesheet" type="text/css" href="css/style2.css">
@@ -22,11 +25,11 @@
 
   <!--   <link rel="stylesheet" type="text/css" href="css/symbolset/line_fonts.css">
   <link rel="stylesheet" type="text/css" href="css/weather.css"> -->
-  <!-- <link rel="stylesheet" type="text/css" href="css/base.css"> -->
+  <link rel="stylesheet" type="text/css" href="css/base.css">
 
 
 
-  <link rel="stylesheet" type="text/css" href="css/portraitCss.css">
+  <!-- <link rel="stylesheet" type="text/css" href="css/portraitCss.css"> -->
   
 
 
@@ -94,6 +97,29 @@
   </div>
 
 
+<!--   <div ng-show="currentTemp == 'templates/temp2.html'">
+    <video ng-style="temp2VideoStyle" id='temp2Video' ng-src="{{temp2Src.video}}" ui-event="{ ended : 'temp2VideoEnd()'}" ></video>
+  </div> -->
+
+    <div ng-show="currentTemp == 'templates/temp6.html'">
+    
+
+      <div class="video-template">
+    
+        <div class="video-text-top">
+          <h2>Text top</h2>
+        </div>
+        <div class="video-middle">
+          <video ng-style="temp6VideoStyle" id='temp6Video' ng-src="{{temp6Src.video}}" ui-event="{ ended : 'temp6VideoEnd()'}" muted>
+        </div>
+        <div class="video-text-bottom">
+          <h2>Text bottom</h2>
+        </div>
+
+      </div>
+
+
+    </div> <!-- end of temp 6 -->
   
 
   <div ng-show="currentTemp == 'templates/temp16.html'"> <!-- start of temp16 -->

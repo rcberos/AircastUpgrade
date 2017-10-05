@@ -115,17 +115,6 @@ function temp2Controller($scope, $window, $timeout, $http, temp2Src, callback){
 		}, 10);
 	}, 10);
 
-	// $http.get('http://api.openweathermap.org/data/2.5/weather?q=Manila&appid=29e1d90ba906e48e127efbe09126adfe').then(function(response){
-	// 	console.log(response.data);
-	// },
-	// function(error){
-	// 	console.log(error);
-	// });
-
-	
-
-	  
-
 	$scope.temp2VideoEnd = function(){
 		callback();
 	}
@@ -674,6 +663,48 @@ function temp5Controller($scope, $window, $timeout, $http, temp5Src, callback){
 
 
 
+function temp6Controller($scope, $window, $timeout, $http, temp6Src, callback){
+	var widthMultiplier = 1;
+	var heightMultiplier = 1;
+	$scope.temp6VideoStyle = {
+	    // "position": "absolute",
+	    // "top":      "0px",
+	    // "left":     "0px",
+	    "width":    $window.innerWidth*widthMultiplier+"px",
+	    // "height":   $window.innerHeight*heightMultiplier+"px",
+	    "background-color": "black"
+	}
+
+	// $scope.temp6Src = {
+	// 	video: temp6Src.video
+	// }
+
+	$timeout(function(){
+		$timeout(function(){
+
+			// var videoElements = angular.element(document.getElementById('temp2Video'));
+			var videoElements = document.getElementById('temp6Video');
+			// console.log('video');
+			// console.log(videoElements);
+
+			document.getElementById('temp6Video').src = temp6Src.video;
+
+
+
+	    	// videoElements[0].play();
+	    	videoElements.play();
+		}, 10);
+	}, 10);
+
+	$scope.temp6VideoEnd = function(){
+		callback();
+	}
+}
+
+
+
+
+
 function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
  /*
@@ -997,7 +1028,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
 function UpdateWallet($http, CampaignID){
-	console.log('updating Wallet');
+	// console.log('updating Wallet');
 	$http.get('/myID').then(function(response){
       var RpiID = response.data.RpiID;
 
@@ -1007,14 +1038,14 @@ function UpdateWallet($http, CampaignID){
       }
       $http.post('http://54.254.248.115/rpiUpdateWallet', data).then(function(response){
         // console.log(response);
-        console.log('update wallet success');
+        // console.log('update wallet success');
       }, function(err){
-        console.log('wallet update failed');
+        // console.log('wallet update failed');
         console.log(err);
       });
 
     }, function(error){
-      console.log('get config failed');
+      // console.log('get config failed');
     });
 }
 
@@ -1826,95 +1857,25 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
         var interval7, interval8;
 
         var twitterPosition = 0;
-
-
-       function checkIfTwitterDataExpired(){
-
-
-
-                var currentTimeStamp = moment().unix();
-
-                if (localStorage.getItem('twitter-expiration-date') == null) {
-
-                    getDataFromApi();
-                
-                }else{
-
-                  if(localStorage.getItem('twitter-expiration-date') >= currentTimeStamp) {
-                    console.log("Twitter data is still good and data is still within 4 hours.");
-                    console.log("Getting data from the local storage");
-
-                    if (localStorage.getItem('twitter') == null || localStorage.getItem('twitter') == '') {
-                      console.log("data is not good, getting data from the api");
-                      getDataFromApi();
-                    }
-
-                    getDataFromStorage();
-
-                  }else{
-
-                    getDataFromApi();
-
-
-                  }
-
-                }
-
-              } // end of the checkIfNewsDataExpired function
+        var twitterArray = 0;
 
 
        
               // getDataFromApi();
         // checkIfTwitterDataExpired();
 
-         function getDataFromApi() {
-
-          console.log("fetch data from twitter api");
-
-
-          $http.get('/api/twitter')
-              .then(function(response) {
-
-              		console.log("TWITTER");
-                  console.log(response);
-
-                  var currentTimeStamp = moment().unix() + 14400;
-
-                  if (response.data) {
-                      localStorage.setItem('twitter-expiration-date',currentTimeStamp);
-                      localStorage.setItem('twitter',JSON.stringify(response.data));
-                      localStorage.setItem('twitter-position',0);
-                      console.log("fetch data from the local storage");
-                      // location.reload();
-                      getDataFromStorage();
-                  } else {
-                      console.log("nothing returned");
-                  }
-              })
-              .catch(function() {
-                  // handle error
-                  console.log('error occurred');
-                  if (localStorage.getItem('twitter') != null && localStorage.getItem('twitter') != '') {
-                    console.log("fetch data from the local storage");
-                    getDataFromStorage();
-                  }else{
-                    callback();
-                    // $(".twitter .loader").fadeIn("slow");
-                  }
-              })
-
-      }
 
       function currentHashtag(){
 
-          if (twitterCounter < hashtagList.length-1) {
-            inserDataToScope();
-            twitterCounter++;
-          }else{
-            twitterCounter = 0;
-            inserDataToScope();
-          }
+          // if (twitterCounter < hashtagList.length-1) {
+          //   inserDataToScope();
+          //   twitterCounter++;
+          // }else{
+          //   twitterCounter = 0;
+          //   inserDataToScope();
+          // }
 
+          inserDataToScope();
           console.log("Twitter Counter: ", twitterCounter);
       }
         
@@ -1936,14 +1897,14 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 
             // var tweets = twitterData[twitterCounter].statuses;
-            var tweets = twitterData.status.statuses;
+            var tweets = twitterData[twitterArray].statuses;
             var tweetsCount  = tweets.length-1;
             var currentPosition = twitterPosition;
             var nextTweetPosition = (currentPosition < tweetsCount)? currentPosition+1 : 0;
             console.log("Current Tweet Position: " + currentPosition +"/"+tweetsCount);
                 
             // $scope.topHashtag = removeSpace(hashtagList[twitterCounter]);
-            $scope.topHashtag = removeSpace(twitterData.status.topHastagToday);
+            $scope.topHashtag = removeSpace(twitterData[twitterArray].Hashtag);
             
             
             if ($scope.topHashtag.length > 15) {
@@ -2029,25 +1990,35 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
             
         }
         
+        function updateValues(){
+        	$scope.TemplateData.forEach(function(item){
+					if(item.Template == 'temp14'){
+							item.lastTweet = twitterPosition
+							item.lastArray = twitterArray;
+			    		}
+				})
+        }
+
       function changePosition(currentPosition,tweetsCount) {
 
-              if (currentPosition >= tweetsCount) {
+              if (twitterPosition >= tweetsCount) {
                   twitterPosition = 0;
-                  localStorage.setItem('twitter-position', currentPosition);
-                  localStorage.setItem('twitter-counter',twitterCounter);
+                  twitterArray = twitterArray+1;
+                  console.log('twitterData: '+twitterData.length);
+                  if(twitterArray>= twitterData.length){
+                  	twitterArray = 0;
+                  }
+                  updateValues();
+                  console.log('twitterArray: '+twitterArray);
                   currentHashtag();
               } else {
                   twitterPosition++;
-                  localStorage.setItem('twitter-position', currentPosition);
-                  localStorage.setItem('twitter-counter', twitterCounter);
+                  updateValues();
               }
 
-              $scope.TemplateData.forEach(function(item){
-					if(item.Template == 'temp14'){
-							item.lastTweet = twitterPosition
-			    		}
-				})
+
             
+            // inserDataToScope();
             return currentPosition;
 
           }
@@ -2073,28 +2044,13 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 		if(item.Template == 'temp14'){
     			twitterData = item.TempData;
     			twitterPosition = item.lastTweet;
+    			twitterArray = item.lastArray;
 
 
 		          $(".twitter .loader").fadeOut("slow");
 		          inserDataToScope();
     		}
 	})
-
-	// for(var i=0; i< $scope.TemplateData.length; i++){
- //    		if($scope.TemplateData[i].Template == 'temp14'){
- //    			twitterData = $scope.TemplateData[i].TempData;
-
- //    			// hashtagList = twitterData.pop();
-
-	// 	          // localStorage.setItem('twitter-position',0);
-	// 	          // localStorage.setItem('twitter-counter',0);
-	// 	          $(".twitter .loader").fadeOut("slow");
-	// 	          inserDataToScope();
-
- //    			 // inserDataToScope();
- //    			// inserDataToScope(currencyData);
- //    		}
- //    	}
 
     $timeout(removeInterval, 58000);   
     $timeout(callback, 60000);
@@ -2767,7 +2723,7 @@ function temp18Controller($scope, $window, $timeout, $http, temp2Src, callback, 
     var afternoon = ['11','12','13','14','15','16','17'];
     var night = ['18','19','20','21','22','23','24'];
     var midnight = ['01','02','03','04','05'];
-    var status = 'morning';
+    var status;
 	 
 	    weather = function() {
 	        var d = $q.defer();

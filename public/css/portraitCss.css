@@ -1621,3 +1621,33 @@
 }
 
 /*--------------- end of restaurant ---------*/
+
+/*start of video portrait*/
+
+.video-template {
+  width: 100vw;
+  height: 100vh;
+  font-size: 4vh;
+}
+.video-template .video-text-top, .video-template .video-text-bottom {
+  background: black;
+  color: white;
+  height: 32.5vh;
+}
+.video-template .video-text-top h2, .video-template .video-text-bottom h2 {
+  text-align: center;
+  font-size: 1em;
+  padding: 1em;
+}
+.video-template .video-middle {
+  background: white;
+  width: 100%;
+  height: 35vh !important;
+  height: auto;
+}
+.video-template .video-middle video {
+  object-fit: contain;
+}
+
+
+/*end of video portrait*/

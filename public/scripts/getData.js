@@ -153,6 +153,7 @@ function temp14GetData($http, $scope){
 								if(item.Template == 'temp14'){
 									item.TempData = response.data;
 									item.lastTweet = 0;
+									item.lastArray = 0;
 									item.hasData = true;
 		        					item.lastQuery = Date.now();
 									console.log('Get Data Temp Data 14');
