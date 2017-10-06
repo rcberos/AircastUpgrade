@@ -855,10 +855,10 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
               // var parsedData = JSON.parse(x);
               var parsedData = localData;
 
-              //check if data is empty
-              if (parsedData == '') {
-                getDataFromApi();
-              }
+              // //check if data is empty
+              // if (parsedData == '') {
+              //   getDataFromApi();
+              // }
 
               var newsList = parsedData.articles;
               var currentPosition = parseInt(localStorage.getItem("news-position")) || 0;
@@ -1019,8 +1019,8 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 		
 	}
 
-    $timeout(removeInterval, 50000);      
-	$timeout(callback, 52000);
+    $timeout(removeInterval, 37000);      
+	$timeout(callback, 39000);
 
 }
 
@@ -1406,8 +1406,8 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
 		
 	}
 
-    $timeout(removeInterval2, 58000);      
-	$timeout(callback, 60000);
+    $timeout(removeInterval2, 38000);      
+	$timeout(callback, 40000);
 
 	// fetchRestaurantData(config.url);
 
@@ -1416,6 +1416,24 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
 function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $q){ 
 
     var today = moment().format('MMM. DD, YYYY');
+
+    var currentTime = moment().format('HH');
+
+    var morning = ['05','06','07','08','09','10'];
+    var afternoon = ['11','12','13','14','15','16','17'];
+    var night = ['18','19','20','21','22','23','24'];
+    var midnight = ['01','02','03','04','05'];
+    var status = 'morning';
+
+    if (morning.indexOf(currentTime) != -1) {
+      status = 'morning';
+    }else if (afternoon.indexOf(currentTime) != -1) {
+      status = 'afternoon';
+    }else if (night.indexOf(currentTime) != -1) {
+      status = 'night';
+    }else {
+      status = 'midnight';
+    }
 
     var data1, data2;
  
@@ -1532,12 +1550,32 @@ function temp12Controller($scope, $window, $timeout, $http, tempSrc, callback, $
 
 		        console.log(now_w.weather);
 
-		        if (now_w.weather == 'Rain') {
-		          $scope.weather_background = "/assets/weather-rainy.png";
-		        }else{
-		          $scope.weather_background = "/assets/weather-sunny.jpg";
+		        var temp;
+
+		        if ((now_w["weather"] == 'Rain' || now_w["weather"] == 'thunderstorm' || now_w["weather"] == 'shower rain') && status == 'morning') {
+		          temp = '/assets/weather-landscape-rain-morning.png';
+		          console.log('getting morning-rain background');
+		        }else if ((now_w["weather"] == 'Rain' || now_w["weather"] == 'thunderstorm' || now_w["weather"] == 'shower rain') && status == 'afternoon') {
+		          temp = '/asset//weather-landscape-rain-afternoon.png';
+		        }else if ((now_w["weather"] == 'Rain' || now_w["weather"] == 'thunderstorm' || now_w["weather"] == 'shower rain') && status == 'night') {
+		          temp = '/assets/weather-landscape-rain-night.png';
+		        }else if ((now_w["weather"] == 'Rain' || now_w["weather"] == 'thunderstorm' || now_w["weather"] == 'shower rain') && status == 'midnight') {
+		          temp = '/assets/weather-landscape-rain-night.png';
+		        }else if (status == 'morning') {
+		          temp = '/assets/weather-landscape-sun-morning.png';
+		        }else if (status == 'afternoon') {
+		          temp = '/assets/weather-landscape-sun-afternoon.png';
+		        }else if (status == 'night') {
+		          temp = '/assets/weather-landscape-sun-night.png';
+		        }else if (status == 'midnight') {
+		          temp = '/assets/weather-landscape-sun-night.png';
+		        }else {
+		          temp = '/assets/weather-sun-morning';
 		        }
-		          
+
+		        $scope.weather_background = temp;
+		        
+
 		        if (now_w["icon"] === 'icon-sun') {
 		             now_w["animation"] = 'rotateInfinite' + ' ' + now_w["icon"];
 		        }else {
@@ -1990,7 +2028,7 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
             
         }
         
-        function updateValues(){
+        function updateValues() {
         	$scope.TemplateData.forEach(function(item){
 					if(item.Template == 'temp14'){
 							item.lastTweet = twitterPosition
@@ -2052,8 +2090,8 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
     		}
 	})
 
-    $timeout(removeInterval, 58000);   
-    $timeout(callback, 60000);
+    $timeout(removeInterval, 38000);   
+    $timeout(callback, 40000);
 
 
 };
@@ -2070,25 +2108,13 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
     var loopCounter = 0;
     var interval5, interval6;
     var hugotList;
-    
-    
-    // var hugotList = [
-    //     "Sabi ko na nga ba sabon ka! Kasi I'm SOAPer in love with you!",
-    //     "Sana gravity nalang ako para kahit lumayo ka babalik at babalik ka din sa akin.",
-    //     "Don't waste your time to the person who doesn't even cares to your feelings.",
-    //     "Kung dalawa ang mahal mo, piliin mo yung pangalawa.. kasi, hindi ka naman magmamahal ng iba kung mahal mo talaga yung una.",
-    //     "Sa Tindi ng Trapik sa EDSA, naniniwala na ako sa FOREVER.",
-    //     "Ang Paglalakbay natin sa buhay ay tulad sa batas trapiko. Alam natin kung kailan maghahanda, ititigil at magpapatuloy, higit sa lahat ng sumusunod sa batas.",
-    //     "Ang landian ay parang pagkain lang. Pag nasobrahan, nakakalaki ng tiyan.",
-    //     "Liliko ako kahit saan, Makarating lang sa Kinaroroonan mo.",
-    //     "Hintayin mo ang True Love mo. Na Traffic lang yun sa malalanding tao.",
-    //     "If you want to be part of my life, make sure that you are ready to accept not only the good parts but also my stupid side.",
-    //     "How can you love someone else. If you’re returning to the past.",
-    //     "In a relationship, no matter how carefully you hold the one.. Yet you have lost it.. Because he had released the hold earlier.",
-        
-    // ];
 
-    console.log(hugotList);
+     var bgList = ['/assets/hugot-landscape-1.png',
+     '/assets/hugot-landscape-2.png',
+     '/assets/hugot-landscape-3.png',
+     '/assets/hugot-landscape-4.png',
+     '/assets/hugot-landscape-5.png'];
+    
     for(var i=0; i< $scope.TemplateData.length; i++){
     		if($scope.TemplateData[i].Template == 'temp15'){
     			hugotList = $scope.TemplateData[i].TempData;
@@ -2121,6 +2147,7 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
         function insertDataToScope() {
             
              $scope.hugotText = hugotList[makeUniqueRandom()];
+             $scope.hugotBackground  = bgList[Math.floor(Math.random() * bgList.length)];
 
               // $scope.hugotText = hugotList[0];
 
@@ -2168,10 +2195,14 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
         function hugotRemoveClass(){
             $(".hugot-text").delay(2000).removeClass(config.animationEnter);
+            $(".hugot").delay(2000).removeClass("hugot-animation");
+            $(".hugot-title").delay(2000).removeClass("fadeInDown");
         }
 
         function hugotAddClass(){
             $(".hugot-text").addClass(config.animationEnter);
+            $(".hugot").addClass("hugot-animation");
+            $(".hugot-title").addClass("fadeInDown");
         }
        
 
@@ -2212,7 +2243,7 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
     var temp, movieData;
     var loopCounter = 0;
-    var currentPosition = parseInt(localStorage.getItem('movie-position')) || 0;
+    var currentPosition = 0;
     var moviesLength = 0;
     var movies, interval9, interval10; 
 
@@ -2230,91 +2261,103 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
     	$scope.movieslist = "Latest Movies";
     }
 
+    for(var i=0; i< $scope.TemplateData.length; i++){
+		if($scope.TemplateData[i].Template == 'temp16'){
+			movieData = $scope.TemplateData[i].TempData.results;
+			currentPosition = $scope.TemplateData[i].moviePosition;
+			getDataFromStorage();
+		}
+	}
 
-      function checkIfMovieDataExpired(){
 
-                var currentTimeStamp = moment().unix();
+    //   function checkIfMovieDataExpired(){
 
-                if (localStorage.getItem('movie-expiration-date') == null) {
+    //             var currentTimeStamp = moment().unix();
 
-                    getDataFromApi();
+    //             if (localStorage.getItem('movie-expiration-date') == null) {
+
+    //                 getDataFromApi();
                 
-                }else{
+    //             }else{
 
-                  if(localStorage.getItem('movie-expiration-date') >= currentTimeStamp) {
-                    console.log("Movie data is still good and data is still within 4 hours.");
-                    console.log("Getting data from the local storage");
+    //               if(localStorage.getItem('movie-expiration-date') >= currentTimeStamp) {
+    //                 console.log("Movie data is still good and data is still within 4 hours.");
+    //                 console.log("Getting data from the local storage");
 
-                    if (localStorage.getItem('movie') == null || localStorage.getItem('movie') == '') {
-                      console.log("data is not good, getting data from the api");
-                      getDataFromApi();
-                    }
+    //                 if (localStorage.getItem('movie') == null || localStorage.getItem('movie') == '') {
+    //                   console.log("data is not good, getting data from the api");
+    //                   getDataFromApi();
+    //                 }
 
-                    getDataFromStorage();
+    //                 getDataFromStorage();
 
-                  }else{
+    //               }else{
 
-                    getDataFromApi();
-
-
-                  }
-
-                }
-
-              } // end of the checkIfMovieDataExpired function
+    //                 getDataFromApi();
 
 
-    checkIfMovieDataExpired();
+    //               }
 
-    function getDataFromApi() {
+    //             }
 
-          console.log("fetch data from themoviedb api");
+    //           } // end of the checkIfMovieDataExpired function
 
 
-          $http.get(config.url)
-              .then(function(response) {
+    // checkIfMovieDataExpired();
 
-                  var currentTimeStamp = moment().unix() + 259200;
+    // function getDataFromApi() {
 
-                  if (response.data) {
-                      localStorage.setItem('movie-expiration-date',currentTimeStamp);
-                      localStorage.setItem('movie',JSON.stringify(response.data));
-                      localStorage.setItem('movie-position',0);
-                      location.reload();
-                      console.log("fetch data from the local storage");
-                      getDataFromStorage();
-                  } else {
-                      console.log("nothing returned");
-                  }
-              })
-              .catch(function() {
-                  // handle error
-                  console.log('error occurred');
-                  if (localStorage.getItem('movie') != null && localStorage.getItem('movie') != '') {
-                    console.log("fetch data from the local storage");
-                    getDataFromStorage();
-                  }else{
-                    callback();
-                  }
-              })
+    //       console.log("fetch data from themoviedb api");
 
-      }
 
+    //       $http.get(config.url)
+    //           .then(function(response) {
+
+    //               var currentTimeStamp = moment().unix() + 259200;
+
+    //               if (response.data) {
+    //                   localStorage.setItem('movie-expiration-date',currentTimeStamp);
+    //                   localStorage.setItem('movie',JSON.stringify(response.data));
+    //                   localStorage.setItem('movie-position',0);
+    //                   location.reload();
+    //                   console.log("fetch data from the local storage");
+    //                   getDataFromStorage();
+    //               } else {
+    //                   console.log("nothing returned");
+    //               }
+    //           })
+    //           .catch(function() {
+    //               // handle error
+    //               console.log('error occurred');
+    //               if (localStorage.getItem('movie') != null && localStorage.getItem('movie') != '') {
+    //                 console.log("fetch data from the local storage");
+    //                 getDataFromStorage();
+    //               }else{
+    //                 callback();
+    //               }
+    //           })
+
+    //   }
+
+
+        function updateValues() {
+        	$scope.TemplateData.forEach(function(item){
+					if(item.Template == 'temp16'){
+							item.moviePosition = currentPosition;
+			    		}
+				})
+        }
 
        function getDataFromStorage() {
 
-          
-          temp = localStorage.getItem('movie');
-          movieData = JSON.parse(temp);
-          movies = movieData.results;
-          moviesLength = movies.length;
+          moviesLength = movieData.length;
           inserDataToScope();
       }
 
 
     function inserDataToScope(){
 
-        var result = movies[currentPosition];
+        var result = movieData[currentPosition];
 
         if (result.overview.length > 400) {
             $(".movie-description p").css("font-size",".6em");
@@ -2344,13 +2387,12 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
     	
 	       if ((currentPosition+1) >= moviesLength) {
               currentPosition = 0;
-              localStorage.setItem('movie-position',currentPosition);
-              console.log('setting data ' , currentPosition);
+              updateValues();
               inserDataToScope();
+
           } else {
               currentPosition++;
-              localStorage.setItem('movie-position',currentPosition);
-              console.log('setting data ' , currentPosition);
+              updateValues();
               inserDataToScope();
           }
 
@@ -3550,7 +3592,7 @@ function temp22Controller($scope, $window, $timeout, $http, temp2Src, callback, 
         'animationOut' : 'flipOutX'
     }
 
-    var bgList = ['/assets/hugot-background-1.png','/assets/hugot-background-2.png','/assets/hugot-background-3.png','/assets/hugot-background-4.png','/assets/hugot-background-5.png']
+    var bgList = ['/assets/hugot-background-1.png','/assets/hugot-background-2.png','/assets/hugot-background-3.png','/assets/hugot-background-4.png','/assets/hugot-background-5.png'];
     
 
     var interval5, interval6;
@@ -3605,7 +3647,7 @@ function temp22Controller($scope, $window, $timeout, $http, temp2Src, callback, 
         function insertDataToScope() {
             
              $scope.hugotText = hugotList[makeUniqueRandom()];
-             $scope.hugotBackground  = bgList[Math.floor(Math.random() * 4)];
+             $scope.hugotBackground  = bgList[Math.floor(Math.random() * bgList.length)];
 
              
         }

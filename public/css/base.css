@@ -103,6 +103,7 @@
 .news .news-aside .news-item h1 {
   font-size: 0.9em;
   margin-bottom: 0.5em;
+  font-weight: 400;
 }
 .news .news-aside .news-item p {
   font-size: 0.6em;
@@ -738,6 +739,55 @@
   font-size: 4vh;
 
 }
+
+.hugot-animation {
+  animation: fadeInImage;
+  animation-duration: 3s;
+}
+
+.hugot-title {
+
+    position: absolute;
+    z-index: 100;
+    color: white;
+    text-align: center;
+    width: 100%;
+    top: 2em;
+}
+
+    .hugot-title-text {
+      font-size: 4em;
+      border-radius: .2em;
+      padding: .06em .9em;
+      color: black;
+      background: white;
+      font-family: 'Lobster';
+      color: #5c5c5c;
+    }
+
+
+
+.hugot-border1 {
+    border: .2em solid white;
+    position: absolute;
+    top: 4.5em;
+    left: 2.5em;
+    right: 2.5em;
+    bottom: 3.5em;
+    z-index: 99;
+}
+
+.hugot-border2 {
+    border: .2em solid white;
+    position: absolute;
+    top: 3.5em;
+    left: 3.5em;
+    right: 3.5em;
+    bottom: 2.5em;
+    z-index: 99;
+
+}
+
 .hugot .hugot-text-container {
   display: flex;
   align-items: center;
@@ -756,7 +806,7 @@
 .hugot .hugot-text {
   font-size: 2em;
   color: white;
-  font-weight: 400;
+  font-weight: 700;
   text-shadow: 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.3);
   padding: 2em 2em;
   text-align: center;
@@ -830,6 +880,7 @@
 }
 .upcoming-movies .movie-right h2 {
   font-size: 0.8em;
+  font-weight: 500;
 }
 .upcoming-movies .movie-right h3 {
   margin-bottom: 1em;
