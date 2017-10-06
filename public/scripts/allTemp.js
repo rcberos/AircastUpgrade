@@ -1593,8 +1593,6 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
       function inserDataToScope(){
 
-
-            // var tweets = twitterData[twitterCounter].statuses;
             var tweets = twitterData[twitterArray].statuses;
             var tweetsCount  = tweets.length-1;
             var currentPosition = twitterPosition;
@@ -1708,7 +1706,6 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
                   }
                   updateValues();
                   console.log('twitterArray: '+twitterArray);
-                  currentHashtag();
               } else {
                   twitterPosition++;
                   updateValues();
