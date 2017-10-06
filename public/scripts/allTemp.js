@@ -1605,7 +1605,7 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
             $scope.topHashtag = removeSpace(twitterData[twitterArray].Hashtag);
             
             
-            if ($scope.topHashtag.length > 15) {
+            if ($scope.topHashtag.length >= 14) {
                 $(".hashtag-overlay").css("font-size","3.5em");
                 $(".hashtag-overlay").css("top","2.5em");
                 $(".hashtag-overlay").css("letter-spacing","0");
