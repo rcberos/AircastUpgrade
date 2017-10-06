@@ -756,44 +756,6 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
     
         console.log(config.url);
         console.log("config source -> " + config.source);
-    
-
-        function checkIfNewsDataExpired(){
-
-          var currentDate = moment().format('MM-DD-YYYY');
-
-          if (localStorage.getItem('news-expiration-date') == null) {
-
-              getDataFromApi();
-          	
-          }else{
-
-            if(currentDate == localStorage.getItem('news-expiration-date')) {
-              console.log("News data is still within the same day");
-              console.log("Getting data from the local storage");
-
-              if (localStorage.getItem('news-source') == null) {
-                localStorage.setItem('news-source',config.source);
-                getDataFromApi();
-              }
-
-              if (localStorage.getItem('news-source') != config.source) {
-                console.log("news source is not the same with the config.source, getting data from api");
-                getDataFromApi();
-              }
-
-              insertDataToScope();
-
-            }else{
-
-              getDataFromApi();
-
-
-            }
-
-          }
-
-        } // end of the checkIfNewsDataExpired function
 
         
         for(var i=0; i< $scope.TemplateData.length; i++){
@@ -803,47 +765,6 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
     		}
     	}
 
-    // checkIfNewsDataExpired();
-
-        
-
-      // this function  will get data from the api if the json file is not yet saved in the local storage
-      function getDataFromApi() {
-
-          console.log("fetch data from news api");
-
-
-          $http.get(config.url)
-              .then(function(response) {
-
-                  var currentDate = moment().format('MM-DD-YYYY');
-
-                  if (response.data) {
-                      localStorage.setItem('news-expiration-date',currentDate);
-                      localStorage.setItem('news',JSON.stringify(response.data));
-                      localStorage.setItem('news-position',0);
-                      localStorage.setItem('news-source',config.source);
-                      console.log("fetch data from the local storage");
-                      location.reload();
-                      insertDataToScope();
-                  } else {
-                      console.log("nothing returned");
-                  }
-              })
-              .catch(function() {
-                  // handle error
-                  console.log('error occurred');
-
-                  if (localStorage.getItem('news') != null && localStorage.getItem('news') != '') {
-                    console.log("fetch data from the local storage");
-                    insertDataToScope();
-                  }else{
-                    callback();                    
-                    // $(".news-loader").fadeIn("slow");
-                  }
-              })
-
-      }
 
           //insert all the data to the angular $scope
       function insertDataToScope() {
@@ -1112,130 +1033,6 @@ function temp11Controller($scope, $window, $timeout, $http, tempSrc, callback){
     		}
     	}
     	
-
-      function checkIfRestaurantDataExpired(){
-
-          var currentTimeStamp = moment().unix();
-
-
-
-          if (localStorage.getItem('restaurant-expiration-date') == null) {
-
-              fetchRestaurantData(config.url);
-          
-          }else{
-
-            if(localStorage.getItem('restaurant-expiration-date') >= currentTimeStamp) {
-              console.log("restaurant data is still good and data is still within 1 month.");
-              console.log("Getting data from the local storage");
-
-              if (localStorage.getItem('restaurant') == null || localStorage.getItem('restaurant') == '') {
-                console.log("data is not good, getting data from the api");
-                fetchRestaurantData(config.url);
-              }
-
-              getDataFromStorage();
-
-            }else{
-
-              fetchRestaurantData(config.url);
-
-
-            }
-
-          }
-
-        } // end of the checkIfNewsDataExpired function
-
-        // fetchRestaurantData(config.url);
-        // checkIfRestaurantDataExpired();
-
-        function fetchRestaurantData(url){
-
-            var currentTimeStamp = moment().unix() + 2592000;
-
-           $http.get(url,config.zomatoConfig)
-              .then(function(response) {
-
-                  if (response.data) {
-                  	console.log('resto');
-                  	console.log(response.data);
-
-                    var restaurants = response.data.nearby_restaurants;
-
-                    for (var i = 0 ; i < restaurants.length; i++) {
-
-                      if (restaurantNameList.indexOf(restaurants[i].restaurant.name) == -1) {
-                        restaurantNameList.push(restaurants[i].restaurant.name);
-                        restaurantList.push(restaurants[i]);
-                      }
-                    }
-
-                      if (restaurantList.length < 100) {
-                        checkIfListReach50(restaurantList.length);
-                      }else{
-                        localStorage.setItem('restaurant-expiration-date',currentTimeStamp);
-                        localStorage.setItem('restaurant',JSON.stringify(restaurantList));
-                        getDataFromStorage();
-                      }
-                      
-                  } else {
-                      console.log("nothing returned");
-                  }
-              })
-              .catch(function() {
-                  // handle error
-                  console.log('error occurred');
-                  callback();
-
-              })
-
-        }
-
-        function checkIfListReach50(restaurantListLength){
-
-           var currentTimeStamp = moment().unix() + 2592000;
-           console.log(restaurantListLength);
-
-            config.lat += .01;
-
-            if (tempCount == restaurantListLength) {
-              config.long += 0.01;
-              counter++;
-            }else {
-              tempCount = restaurantListLength;
-              counter = 0;
-            }
-
-            if (counter > 5) {
-                localStorage.setItem('restaurant-expiration-date',currentTimeStamp);
-                localStorage.setItem('restaurant',JSON.stringify(restaurantList));
-                location.reload();
-                getDataFromStorage();
-
-            }else {
-              url = 'https://developers.zomato.com/api/v2.1/geocode?lat=' + config.lat + '&lon=' + config.long;
-              fetchRestaurantData(url);
-            }
-
-
-        }
-
-        function getDataFromStorage() {
-
-          console.log("fetch data from local storage");
-
-          temp = localStorage.getItem('restaurant');
-          restaurantData = JSON.parse(temp);
-          console.log(JSON.stringify(restaurantData));
-          // localStorage.setItem('restaurant-position',0);
-
-          insertDataToScope();
-      }
-
-
-    
-
       //insert all the data to the angular $scope
       function insertDataToScope() {
           
@@ -1633,127 +1430,18 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
         console.log(config.currentDate);
         console.log(config.yesterdayDate);
 
-
-        function checkIfCurrencyDataExpired(){
-
-                var currentTimeStamp = moment().unix();
-
-                if (localStorage.getItem('currency-expiration-date') == null) {
-
-                    getDataFromApi();
-                
-                }else{
-
-                  if(localStorage.getItem('currency-expiration-date') >= currentTimeStamp) {
-                    console.log("currency data is still good and data is still within 2 hours.");
-                    console.log("Getting data from the local storage");
-
-                    if (localStorage.getItem('currency') == null || localStorage.getItem('currency') == '') {
-                      console.log("data is not good, getting data from the api");
-                      getDataFromApi();
-                    }
-
-                    getDataFromStorage();
-
-                  }else{
-
-                    getDataFromApi();
-
-
-                  }
-
-                }
-
-              } // end of the checkIfNewsDataExpired function
-
-
-         function getDataFromApi() {
-
-            errorCounter++;
-
-            if(errorCounter > 10) {
-                //add some error catch here if the internet is not working
-                getDataFromStorage();
-
-            } else {
-
-
-                console.log("fetch data from currency api");
-
-                //get the current data today
-                var url = 'https://openexchangerates.org/api/latest.json?app_id=611c0c2870aa4804a4014db80c91ee2d';
-                var results = [];
-                
-
-              $http.get(url)
-                  .then(function(response) {
-
-                      console.log(response);
-
-                      var currentTimeStamp = moment().unix() + 7200;
-
-                      if (response.data) {
-
-                          results.push(response.data.rates);
-
-                          url = 'https://openexchangerates.org/api/historical/'+ config.yesterdayDate +'.json?app_id=611c0c2870aa4804a4014db80c91ee2d';
-
-                          $http.get(url)
-                                .then(function(response) {
-
-                                    results.push(response.data.rates);
-
-                                    localStorage.setItem('currency-expiration-date',currentTimeStamp);
-                                    localStorage.setItem('currency',JSON.stringify(results));
-                                })
-                                .catch(function(){
-
-                                    console.log('error occured on the 2nd level of currency');
-                                      if (localStorage.getItem('currency') != null && localStorage.getItem('currency') != '') {
-                                        console.log("fetch data from the local storage");
-                                        getDataFromStorage();
-                                      }else{
-                                      	callback();     
-                                        // getDataFromApi();
-                                      }
-                                })
-
-
-
-                          console.log("fetch data from the local storage");
-                          getDataFromStorage();
-                      } else {
-                          console.log("nothing returned");
-                      }
-                  })
-                  .catch(function() {
-                      // handle error
-                      console.log('error occurred on the first level of currency');
-                      if (localStorage.getItem('currency') != null && localStorage.getItem('currency') != '') {
-                        console.log("fetch data from the local storage");
-                        getDataFromStorage();
-                      }else{
-                        callback();
-                      }
-                  })
-
-            }
-
-            
-      }
-
-
-    function getDataFromStorage() {
-
-          
-          temp = localStorage.getItem('currency');
-          currencyData = JSON.parse(temp);
-
-          inserDataToScope(currencyData);
-      }
-
         
-        function inserDataToScope(rates) {
+        for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp13'){
+    			currencyData = $scope.TemplateData[i].TempData;
+    			// insertDataToScope();
+    			processData(currencyData);
+    		}
+    	}
+
+
+
+        function processData(rates) {
             
             var rate_today= rates[0],
                   rate_yesterday = rates[1],
@@ -1862,13 +1550,6 @@ function temp13Controller($scope, $window, $timeout, $http, tempSrc, callback, $
             
         }
         
-        for(var i=0; i< $scope.TemplateData.length; i++){
-    		if($scope.TemplateData[i].Template == 'temp13'){
-    			currencyData = $scope.TemplateData[i].TempData;
-    			// insertDataToScope();
-    			inserDataToScope(currencyData);
-    		}
-    	}
 
         // checkIfCurrencyDataExpired();
 
@@ -1898,38 +1579,17 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
         var twitterArray = 0;
 
 
-       
-              // getDataFromApi();
-        // checkIfTwitterDataExpired();
+    $scope.TemplateData.forEach(function(item){
+		if(item.Template == 'temp14'){
+    			twitterData = item.TempData;
+    			twitterPosition = item.lastTweet;
+    			twitterArray = item.lastArray;
 
+		          $(".twitter .loader").fadeOut("slow");
+		          inserDataToScope();
+    		}
+	})
 
-      function currentHashtag(){
-
-          // if (twitterCounter < hashtagList.length-1) {
-          //   inserDataToScope();
-          //   twitterCounter++;
-          // }else{
-          //   twitterCounter = 0;
-          //   inserDataToScope();
-          // }
-
-          inserDataToScope();
-          console.log("Twitter Counter: ", twitterCounter);
-      }
-        
-        function getDataFromStorage() {
-
-          
-          temp = localStorage.getItem('twitter');
-          twitterData = JSON.parse(temp);
-
-          hashtagList = twitterData.pop();
-
-          // localStorage.setItem('twitter-position',0);
-          // localStorage.setItem('twitter-counter',0);
-          $(".twitter .loader").fadeOut("slow");
-          inserDataToScope();
-      }
 
       function inserDataToScope(){
 
@@ -2078,17 +1738,6 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 	}
 
-	$scope.TemplateData.forEach(function(item){
-		if(item.Template == 'temp14'){
-    			twitterData = item.TempData;
-    			twitterPosition = item.lastTweet;
-    			twitterArray = item.lastArray;
-
-
-		          $(".twitter .loader").fadeOut("slow");
-		          inserDataToScope();
-    		}
-	})
 
     $timeout(removeInterval, 38000);   
     $timeout(callback, 40000);
@@ -2268,77 +1917,6 @@ function temp16Controller($scope, $window, $timeout, $http, tempSrc, callback){
 			getDataFromStorage();
 		}
 	}
-
-
-    //   function checkIfMovieDataExpired(){
-
-    //             var currentTimeStamp = moment().unix();
-
-    //             if (localStorage.getItem('movie-expiration-date') == null) {
-
-    //                 getDataFromApi();
-                
-    //             }else{
-
-    //               if(localStorage.getItem('movie-expiration-date') >= currentTimeStamp) {
-    //                 console.log("Movie data is still good and data is still within 4 hours.");
-    //                 console.log("Getting data from the local storage");
-
-    //                 if (localStorage.getItem('movie') == null || localStorage.getItem('movie') == '') {
-    //                   console.log("data is not good, getting data from the api");
-    //                   getDataFromApi();
-    //                 }
-
-    //                 getDataFromStorage();
-
-    //               }else{
-
-    //                 getDataFromApi();
-
-
-    //               }
-
-    //             }
-
-    //           } // end of the checkIfMovieDataExpired function
-
-
-    // checkIfMovieDataExpired();
-
-    // function getDataFromApi() {
-
-    //       console.log("fetch data from themoviedb api");
-
-
-    //       $http.get(config.url)
-    //           .then(function(response) {
-
-    //               var currentTimeStamp = moment().unix() + 259200;
-
-    //               if (response.data) {
-    //                   localStorage.setItem('movie-expiration-date',currentTimeStamp);
-    //                   localStorage.setItem('movie',JSON.stringify(response.data));
-    //                   localStorage.setItem('movie-position',0);
-    //                   location.reload();
-    //                   console.log("fetch data from the local storage");
-    //                   getDataFromStorage();
-    //               } else {
-    //                   console.log("nothing returned");
-    //               }
-    //           })
-    //           .catch(function() {
-    //               // handle error
-    //               console.log('error occurred');
-    //               if (localStorage.getItem('movie') != null && localStorage.getItem('movie') != '') {
-    //                 console.log("fetch data from the local storage");
-    //                 getDataFromStorage();
-    //               }else{
-    //                 callback();
-    //               }
-    //           })
-
-    //   }
-
 
         function updateValues() {
         	$scope.TemplateData.forEach(function(item){

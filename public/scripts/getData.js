@@ -2,7 +2,7 @@ function temp10GetData($http, $scope){
 	console.log('temp10');
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp10'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp10'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			console.log('news query');
 
 			$http.get('https://newsapi.org/v1/articles?source=cnn&sortBy=top&apiKey=44e7bd68b7d74cef902f1d9c7cb96b72')
@@ -64,7 +64,7 @@ function temp11GetData($http, $scope){
 function temp12GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp12'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp12'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			$http.get('http://api.openweathermap.org/data/2.5/forecast/daily?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67&q=Manila&cnt=7')
 				.then(function(response1){
 					$http.get('http://api.openweathermap.org/data/2.5/weather?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67')
@@ -108,7 +108,7 @@ function temp13GetData($http, $scope){
 
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp13'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp13'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			$scope.TemplateData.forEach(function(item){
 				if(item.Template == 'temp13'){
 
@@ -146,7 +146,7 @@ function temp13GetData($http, $scope){
 function temp14GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp14'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp14'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			$http.get('/api/twitter')
 		              .then(function(response) {
 		              		$scope.TemplateData.forEach(function(item){
@@ -171,7 +171,7 @@ function temp14GetData($http, $scope){
 function temp15GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp15'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp15'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 
 			$scope.TemplateData.forEach(function(item){
 				if(item.Template == 'temp15'){
@@ -266,7 +266,7 @@ function temp15GetData($http, $scope){
 function temp16GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp16'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp16'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			$http.get('https://api.themoviedb.org/3/movie/upcoming?api_key=f2ebc8131c456f6ee2f134ac299aa40f&language=en&US')
 		              .then(function(response) {
 		              		$scope.TemplateData.forEach(function(item){
@@ -295,7 +295,7 @@ function temp17GetData($http, $scope){
 	// console.log('temp10');
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp17'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp17'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			console.log('news query');
 
 			$http.get('https://newsapi.org/v1/articles?source=cnn&sortBy=top&apiKey=44e7bd68b7d74cef902f1d9c7cb96b72')
@@ -323,7 +323,7 @@ function temp17GetData($http, $scope){
 function temp18GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp18'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp18'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			$http.get('http://api.openweathermap.org/data/2.5/forecast/daily?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67&q=Manila&cnt=7')
 				.then(function(response1){
 					$http.get('http://api.openweathermap.org/data/2.5/weather?id=1701668&APPID=9f534971ae41269da3bdca6da5ad3a67')
@@ -352,7 +352,7 @@ function temp18GetData($http, $scope){
 function temp20GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp20'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp20'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			$http.get('/api/twitter')
 		              .then(function(response) {
 		              		$scope.TemplateData.forEach(function(item){
@@ -375,7 +375,7 @@ function temp20GetData($http, $scope){
 function temp23GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp23'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp23'&&(!item.hasData||item.lastQuery < (Date.now()-36000000))){
 			$http.get("https://developers.zomato.com/api/v2.1/geocode?lat=14.6297778&lon=121.027977", {
 		            headers : {
 		                'user-key': '1e3481187e26de091dfdb5f7f768312a',
@@ -407,7 +407,7 @@ function temp23GetData($http, $scope){
 function temp22GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp22'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp22'&&(!item.hasData||item.lastQuery < (Date.now()-360000))){
 
 			$scope.TemplateData.forEach(function(item){
 				if(item.Template == 'temp22'){
@@ -519,7 +519,7 @@ function temp19GetData($http, $scope){
 
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp19'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp19'&&(!item.hasData||item.lastQuery < (Date.now()-360000))){
 			$scope.TemplateData.forEach(function(item){
 				if(item.Template == 'temp19'){
 
