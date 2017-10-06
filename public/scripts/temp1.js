@@ -1,5 +1,8 @@
+// console.log('fuck temp 1');
 function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
-	
+		
+		// console.log('temp1 controller');
+
 	var widthMultiplier = 0.75;
 	var heightMultiplier = 0.75;
 	$scope.temp1VideoStyle = {
@@ -44,7 +47,7 @@ function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
 	}
 
 	$scope.temp1Src = {
-		video: temp1Src.video,
+		// video: temp1Src.video,
 		side1: temp1Src.side1,
 		side2: temp1Src.side2,
 		side3: temp1Src.side3,
@@ -59,24 +62,14 @@ function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
     
     console.log('hello');
 	function temp1VideoPlay(){
-		// $scope.temp1Src.video = temp1Src.video;
-
-		// if(!$scope.$$phase) {
-		// 	$scope.$apply();
-		// }
 
 		vidCtr++;
-		var videoElements = angular.element(document.getElementById('temp1Video'));
-		videoElements[0].play();
-		// $timeout(function(){
-		// 	// var videoElements = angular.element(document.getElementById('temp1Video'));
-	 //  //   		videoElements[0].play();
 
-		// 	$timeout(function(){
-		// 		var videoElements = angular.element(document.getElementById('temp1Video'));
-	 //    		videoElements[0].play();
-		// 	}, 10);
-		// }, 10);
+		var vidElem = document.getElementById('temp1Video');
+		vidElem.src = temp1Src.video;
+
+		vidElem.play();
+
 		
 	}
 
@@ -91,3 +84,5 @@ function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
 
 	temp1VideoPlay();
 }
+
+

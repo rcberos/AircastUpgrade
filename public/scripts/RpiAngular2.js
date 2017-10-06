@@ -62,6 +62,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
                 bottom: "assets/bottom.jpg",
               },
     tempJs: 'scripts/temp1.js',
+    tempCss: 'css/temp1.css',
     tempInit: 'temp1Controller'
   }
 
@@ -230,21 +231,22 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
 
     if($scope.templates.length == 0){
-      var payload = {
-        CampaignID: 2,
-        tempHtml: 'templates/temp1.html',
-        tempSrc: {
-                    video: "assets/audition.mp4",
-                    side1: "assets/side1.jpg",
-                    side2: "assets/side1.jpg",
-                    side3: "assets/side1.jpg",
-                    bottom: "assets/bottom.jpg",
-                  },
-        tempJs: 'scripts/temp1.js',
-        tempInit: 'temp1Controller'
-      }
+        var payload = {
+          CampaignID: 2,
+          tempHtml: 'templates/temp1.html',
+          tempSrc: {
+                      video: "assets/audition.mp4",
+                      side1: "assets/side1.jpg",
+                      side2: "assets/side1.jpg",
+                      side3: "assets/side1.jpg",
+                      bottom: "assets/bottom.jpg",
+                    },
+          tempJs: 'scripts/temp1.js',
+          tempCss: 'css/temp1.css',
+          tempInit: 'temp1Controller'
+        }
 
-      $scope.templates.push(payload);
+        $scope.templates.push(payload);
     }
 
     var playingTemplate = $scope.templates[0];
@@ -275,6 +277,14 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     var payl = [$scope, $window, $timeout, $http, playingTemplate.tempSrc, $scope.templateShuffle];
 
     window[playingTemplate.tempInit].apply(null, payl2);
+
+    // LazyLoad.css(playingTemplate.tempCss, function () {
+    //   LazyLoad.js(playingTemplate.tempJs, function () {
+    //     console.log('playing js');
+    //     window[playingTemplate.tempInit].apply(null, payl2);
+    //   });
+    // });
+
 
   }
 
@@ -451,12 +461,12 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     window['temp15GetData'].apply(null, payl);
     window['temp16GetData'].apply(null, payl);
 
-    window['temp17GetData'].apply(null, payl);
-    window['temp18GetData'].apply(null, payl);
-    window['temp19GetData'].apply(null, payl);
-    window['temp20GetData'].apply(null, payl);
-    window['temp22GetData'].apply(null, payl);
-    window['temp23GetData'].apply(null, payl);
+    // window['temp17GetData'].apply(null, payl);
+    // window['temp18GetData'].apply(null, payl);
+    // window['temp19GetData'].apply(null, payl);
+    // window['temp20GetData'].apply(null, payl);
+    // window['temp22GetData'].apply(null, payl);
+    // window['temp23GetData'].apply(null, payl);
   }
 
   getTempData();
