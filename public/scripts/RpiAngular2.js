@@ -276,14 +276,14 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     var payl2 = [tempNameSpace['$scope'], tempNameSpace['$window'], tempNameSpace['$timeout'], tempNameSpace['$http'], tempNameSpace['source'], tempNameSpace['callback'], tempNameSpace['$q']];
     var payl = [$scope, $window, $timeout, $http, playingTemplate.tempSrc, $scope.templateShuffle];
 
-    window[playingTemplate.tempInit].apply(null, payl2);
+    // window[playingTemplate.tempInit].apply(null, payl2);
 
-    // LazyLoad.css(playingTemplate.tempCss, function () {
-    //   LazyLoad.js(playingTemplate.tempJs, function () {
-    //     console.log('playing js');
-    //     window[playingTemplate.tempInit].apply(null, payl2);
-    //   });
-    // });
+    LazyLoad.css(playingTemplate.tempCss, function () {
+      LazyLoad.js(playingTemplate.tempJs, function () {
+        console.log('playing js');
+        window[playingTemplate.tempInit].apply(null, payl2);
+      });
+    });
 
 
   }
