@@ -66,6 +66,8 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     tempInit: 'temp1Controller'
   }
 
+  $scope.Default = payload;
+
   $scope.templates.push(payload);
 
 
@@ -231,22 +233,22 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
 
     if($scope.templates.length == 0){
-        var payload = {
-          CampaignID: 2,
-          tempHtml: 'templates/temp1.html',
-          tempSrc: {
-                      video: "assets/audition.mp4",
-                      side1: "assets/side1.jpg",
-                      side2: "assets/side1.jpg",
-                      side3: "assets/side1.jpg",
-                      bottom: "assets/bottom.jpg",
-                    },
-          tempJs: 'scripts/temp1.js',
-          tempCss: 'css/temp1.css',
-          tempInit: 'temp1Controller'
-        }
+        // var payload = {
+        //   CampaignID: 2,
+        //   tempHtml: 'templates/temp1.html',
+        //   tempSrc: {
+        //               video: "assets/audition.mp4",
+        //               side1: "assets/side1.jpg",
+        //               side2: "assets/side1.jpg",
+        //               side3: "assets/side1.jpg",
+        //               bottom: "assets/bottom.jpg",
+        //             },
+        //   tempJs: 'scripts/temp1.js',
+        //   tempCss: 'css/temp1.css',
+        //   tempInit: 'temp1Controller'
+        // }
 
-        $scope.templates.push(payload);
+        $scope.templates.push($scope.Default);
     }
 
     var playingTemplate = $scope.templates[0];
@@ -262,6 +264,9 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     if(!$scope.$$phase) {
       $scope.$apply();
     }
+
+
+    // $scope.CurrentTemplate = $
 
     var tempNameSpace = {
       '$scope': $scope,

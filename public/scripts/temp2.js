@@ -1,4 +1,3 @@
-
 function temp2Controller($scope, $window, $timeout, $http, temp2Src, callback){
 	var widthMultiplier = 1;
 	var heightMultiplier = 1;
