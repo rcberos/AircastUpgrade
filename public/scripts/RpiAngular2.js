@@ -453,13 +453,13 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   function getTempData(){
     var payl = [$http, $scope];
 
-    // window['temp10GetData'].apply(null, payl);
-    // window['temp11GetData'].apply(null, payl);
-    // window['temp12GetData'].apply(null, payl);
-    // window['temp13GetData'].apply(null, payl);
+    window['temp10GetData'].apply(null, payl);
+    window['temp11GetData'].apply(null, payl);
+    window['temp12GetData'].apply(null, payl);
+    window['temp13GetData'].apply(null, payl);
     window['temp14GetData'].apply(null, payl);
-    // window['temp15GetData'].apply(null, payl);
-    // window['temp16GetData'].apply(null, payl);
+    window['temp15GetData'].apply(null, payl);
+    window['temp16GetData'].apply(null, payl);
 
     // window['temp17GetData'].apply(null, payl);
     // window['temp18GetData'].apply(null, payl);
