@@ -149,17 +149,20 @@ function temp14GetData($http, $scope){
 		if(item.Template=='temp14'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
 			$http.get('/api/twitter')
 		              .then(function(response) {
-		              		$scope.TemplateData.forEach(function(item){
-								if(item.Template == 'temp14'){
-									item.TempData = response.data;
-									item.lastTweet = 0;
-									item.lastArray = 0;
-									item.hasData = true;
-		        					item.lastQuery = Date.now();
-									console.log('Get Data Temp Data 14');
-				        			console.log(item);
-								}
-							})
+		              		if (response.status == 200 && response.data.length == 5) {
+			              		console.log(response);
+			              		$scope.TemplateData.forEach(function(item){
+									if(item.Template == 'temp14'){
+										item.TempData = response.data;
+										item.lastTweet = 0;
+										item.lastArray = 0;
+										item.hasData = true;
+			        					item.lastQuery = Date.now();
+										console.log('Get Data Temp Data 14');
+					        			console.log(item);
+									}
+								})
+		              		}
 		              })
 		}
 	})
