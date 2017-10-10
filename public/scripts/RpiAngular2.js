@@ -377,7 +377,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
                 if(newTemplates[i].needTempData){
                   var hasTempData = false;
                   for(var j=0; j < $scope.TemplateData.length; j++){
-                    if($scope.TemplateData[j].Template == newTemplates[i].Template){
+                    if($scope.TemplateData[j].Template == newTemplates[i].Template && $scope.TemplateData[j].CampaignID == newTemplates[i].CampaignID){
                       hasTempData = true;
                       break;
                     }
@@ -386,14 +386,16 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
                   if(!hasTempData){
                     var dummyTemp = {
                       Template: newTemplates[i].Template,
-                      hasData: false
+                      hasData: false,
+                      tempSrc: newTemplates[i].tempSrc,
+                      CampaignID: newTemplates[i].CampaignID
                     }
 
                     $scope.TemplateData.push(dummyTemp);
                   }
 
                   for(var j=0; j < $scope.TemplateData.length; j++){
-                    if($scope.TemplateData[j].Template == newTemplates[i].Template && $scope.TemplateData[j].hasData == true){
+                    if($scope.TemplateData[j].Template == newTemplates[i].Template && $scope.TemplateData[j].hasData == true && $scope.TemplateData[j].CampaignID == newTemplates[i].CampaignID){
                       $scope.templates.unshift(newTemplates[i]);
                     }
                   }
@@ -459,7 +461,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     var payl = [$http, $scope];
 
     window['temp10GetData'].apply(null, payl);
-    window['temp11GetData'].apply(null, payl);
+    // window['temp11GetData'].apply(null, payl);
     window['temp12GetData'].apply(null, payl);
     window['temp13GetData'].apply(null, payl);
     window['temp14GetData'].apply(null, payl);

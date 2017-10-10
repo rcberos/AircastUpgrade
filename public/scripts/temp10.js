@@ -22,6 +22,8 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
     var interval1, interval2;
 
     var localData;
+
+    var newsSource;
             
     var config = {
 
@@ -55,6 +57,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
         for(var i=0; i< $scope.TemplateData.length; i++){
     		if($scope.TemplateData[i].Template == 'temp10'){
     			localData = $scope.TemplateData[i].TempData;
+          newsSource = $scope.TemplateData[i].source;
     			insertDataToScope();
     		}
     	}
@@ -115,7 +118,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
                     'article1': article1,
                     'article2':article2,
                     'article3':article3,
-                    'sourceIcon': config.image[config.source]
+                    'sourceIcon': config.image[newsSource]
                 }
               
               $scope.$apply();
