@@ -461,7 +461,7 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
     var payl = [$http, $scope];
 
     window['temp10GetData'].apply(null, payl);
-    // window['temp11GetData'].apply(null, payl);
+    window['temp11GetData'].apply(null, payl);
     window['temp12GetData'].apply(null, payl);
     window['temp13GetData'].apply(null, payl);
     window['temp14GetData'].apply(null, payl);
