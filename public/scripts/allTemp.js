@@ -35,7 +35,7 @@ function UpdateWallet($http, CampaignID){
 
 
 
-<<<<<<< HEAD
+
 //         var config = {
 //             'currentDate': moment(today).format('YYYY-MM-DD'),
 //             'yesterdayDate': moment(yesterday).format('YYYY-MM-DD'),
