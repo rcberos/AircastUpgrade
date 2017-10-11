@@ -453,14 +453,27 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   function getTempData(){
     var payl = [$http, $scope];
 
+    //landscape-content
+
+    //news-landscape-cnn
     window['temp10GetData'].apply(null, payl);
+    //nearby-restaurant-landscape
     window['temp11GetData'].apply(null, payl);
+    //weather-landscape
     window['temp12GetData'].apply(null, payl);
+    //currency-landscape
     window['temp13GetData'].apply(null, payl);
+    //twitter-landscape
     window['temp14GetData'].apply(null, payl);
+    //hugot-landscape
     window['temp15GetData'].apply(null, payl);
+    //movie-landscape
     window['temp16GetData'].apply(null, payl);
 
+    
+
+
+    //portrait-content
     // window['temp17GetData'].apply(null, payl);
     // window['temp18GetData'].apply(null, payl);
     // window['temp19GetData'].apply(null, payl);

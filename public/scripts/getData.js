@@ -146,7 +146,7 @@ function temp13GetData($http, $scope){
 function temp14GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp14'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
+		if(item.Template=='temp14'&&(!item.hasData||item.lastQuery < (Date.now()-300000))){
 			$http.get('/api/twitter')
 		              .then(function(response) {
 		              		if (response.status == 200 && response.data.length == 5) {
@@ -555,4 +555,33 @@ function temp19GetData($http, $scope){
 
 }
 
+
+// function temp24GetData($http, $scope){
+// 	console.log('temp24');
+
+// 	$scope.TemplateData.forEach(function(item){
+// 		if(item.Template=='temp24'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
+// 			console.log('news query');
+
+// 			$http.get('https://newsapi.org/v1/articles?source=espn&sortBy=top&apiKey=44e7bd68b7d74cef902f1d9c7cb96b72')
+// 				.then(function(response){
+// 					console.log('temp 24 success');
+// 					for(var i=0; i<$scope.TemplateData.length; i++){
+// 		        		if($scope.TemplateData[i].Template == 'temp24'){
+// 		        			$scope.TemplateData[i].TempData = response.data;
+// 		        			$scope.TemplateData[i].hasData = true;
+// 		        			$scope.TemplateData[i].lastQuery = Date.now();
+// 		        			console.log('Get Data Temp Data');
+// 		        			console.log($scope.TemplateData);
+// 		        			break;
+// 		        		}
+// 		        	}
+// 				}, function(error){
+// 					console.log(error);
+// 				})
+// 		}
+// 	})
+
+			
+// }
 
