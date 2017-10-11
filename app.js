@@ -10,7 +10,7 @@ var Twit = require('twit');
 
 var app = express()
 
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || 3000);
 app.use('/css', express.static(path.join(__dirname+'/public/css')));
 app.use('/scripts', express.static(path.join(__dirname+'/public/scripts')));
 app.use('/templates', express.static(path.join(__dirname+'/public/templates')));
