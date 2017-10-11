@@ -148,7 +148,6 @@ function temp14Controller($scope, $window, $timeout, $http, tempSrc, callback){
                   }
                   updateValues();
                   console.log('twitterArray: '+twitterArray);
-                  currentHashtag();
               } else {
                   twitterPosition++;
                   updateValues();

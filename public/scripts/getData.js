@@ -162,7 +162,7 @@ function temp13GetData($http, $scope){
 function temp14GetData($http, $scope){
 
 	$scope.TemplateData.forEach(function(item){
-		if(item.Template=='temp14'&&(!item.hasData||item.lastQuery < (Date.now()-310000))){
+		if(item.Template=='temp14'&&(!item.hasData||item.lastQuery < (Date.now()-3600000))){
 			$http.get('/api/twitter')
 		              .then(function(response) {
 		              		if (response.status == 200 && response.data.length == 5) {
