@@ -88,7 +88,7 @@ app.get("/api/twitter",function(req,res){
           
           function getTweets(topHashtag) {
               
-              T.get('search/tweets', { q: topHashtag+" exclude:retweets", lang: 'en', locale: 'fil', result_type: 'mixed', count: 25 }, function(err, data, response) {
+              T.get('search/tweets', { q: topHashtag+" exclude:retweets", lang: 'en', locale: 'fil', result_type: 'mixed', count: 10 }, function(err, data, response) {
 
                  if (!err) { 
                     data.Hashtag = topHashtag;

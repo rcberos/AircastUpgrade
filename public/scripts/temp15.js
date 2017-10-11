@@ -20,7 +20,6 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
     for(var i=0; i< $scope.TemplateData.length; i++){
     		if($scope.TemplateData[i].Template == 'temp15'){
     			hugotList = $scope.TemplateData[i].TempData;
-    			console.log(hugotList);
     		}
     	}
 
