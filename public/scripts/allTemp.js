@@ -2325,8 +2325,8 @@ function temp19Controller($scope, $window, $timeout, $http, tempSrc, callback, $
             console.log(result);
             insertDataToScope(result);
             
-=======
->>>>>>> ece51930b4676cf93ba034dfcb5ae0660fd2bac0
+    }
+}
 
 
 
