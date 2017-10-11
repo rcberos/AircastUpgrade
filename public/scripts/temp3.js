@@ -1,6 +1,17 @@
 function temp3Controller($scope, $window, $timeout, $http, temp2Src, callback, $q){
 
-	weather = function() {
+  var widthMultiplier = 1;
+  var heightMultiplier = 1;
+  $scope.temp3DivStyle = {
+      "position": "absolute",
+      "top":      "0px",
+      "left":     "0px",
+      "width":    $window.innerWidth*widthMultiplier+"px",
+      "height":   $window.innerHeight*heightMultiplier+"px",
+      "background-color": "black"
+  }
+
+  weather = function() {
         var d = $q.defer();
         $http({
           method : 'GET',
@@ -29,28 +40,28 @@ function temp3Controller($scope, $window, $timeout, $http, temp2Src, callback, $
     }
 
     function getGreetingTime (m) {
-      	var g = null; //return g
+        var g = null; //return g
 
-      	// if(!m || !m.isValid()) { return; } //if we can't find a valid or filled moment, we return.
+        // if(!m || !m.isValid()) { return; } //if we can't find a valid or filled moment, we return.
 
-      	var split_afternoon = 12 //24hr time to split the afternoon
-      	var split_evening = 17 //24hr time to split the evening
-      	// var currentHour = parseFloat(m.format("HH"));
+        var split_afternoon = 12 //24hr time to split the afternoon
+        var split_evening = 17 //24hr time to split the evening
+        // var currentHour = parseFloat(m.format("HH"));
 
-      	var date = new Date(m);
-		// Hours part from the timestamp
-		var currentHour = date.getHours();
-		console.log('current: '+currentHour);
+        var date = new Date(m);
+    // Hours part from the timestamp
+    var currentHour = date.getHours();
+    console.log('current: '+currentHour);
 
-      	if(currentHour >= split_afternoon && currentHour <= split_evening) {
-      		g = "afternoon";
-      	} else if(currentHour >= split_evening) {
-      		g = "evening";
-      	} else {
-      		g = "morning";
-      	}
+        if(currentHour >= split_afternoon && currentHour <= split_evening) {
+          g = "afternoon";
+        } else if(currentHour >= split_evening) {
+          g = "evening";
+        } else {
+          g = "morning";
+        }
 
-      	return g;
+        return g;
       }
 
     function get_icon (weather,greeting) {
@@ -93,13 +104,13 @@ function temp3Controller($scope, $window, $timeout, $http, temp2Src, callback, $
       conditions = []
 
       d.data.list.forEach(function(v){
-      	x = {}
+        x = {}
 
-      	var months = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-      	var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      	var date = new Date(v.dt*1000);
-		// Hours part from the timestamp
-		var currentDay = date.getDay();
+        var months = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+        var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        var date = new Date(v.dt*1000);
+    // Hours part from the timestamp
+    var currentDay = date.getDay();
 
         x["temp"] = v.temp.day - 273.15
         // x["day"] = moment(v.dt*1000).format('dddd')
@@ -130,6 +141,6 @@ function temp3Controller($scope, $window, $timeout, $http, temp2Src, callback, $
 
     });
 
-	
-	$timeout(callback, 10000);
+  
+  $timeout(callback, 10000);
 }

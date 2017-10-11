@@ -1,29 +1,10 @@
 
-function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
-
- /*
-    1. entertainment
-    buzzfeed and entertainment-weekly
-
-    2. breaking news
-    cnn, al-jazeera-english, google-news
-
-    3. financial and business
-    -bloomberg,business insider uk
-
-    4. tech
-    techcrunch
-
-    5. sports
-    espn
-    */
-
-    var loopCounter = 0;
+function temp17Controller($scope, $window, $timeout, $http, temp2Src, callback, $q){
+	var loopCounter = 0;
+    var cb = false;
     var interval1, interval2;
 
     var localData;
-
-    var newsSource;
             
     var config = {
 
@@ -52,31 +33,113 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
     
         console.log(config.url);
         console.log("config source -> " + config.source);
+    
+
+        function checkIfNewsDataExpired(){
+
+          var currentDate = moment().format('MM-DD-YYYY');
+
+          if (localStorage.getItem('news-expiration-date') == null) {
+
+              getDataFromApi();
+          	
+          }else{
+
+            if(currentDate == localStorage.getItem('news-expiration-date')) {
+              console.log("News data is still within the same day");
+              console.log("Getting data from the local storage");
+
+              if (localStorage.getItem('news-source') == null) {
+                localStorage.setItem('news-source',config.source);
+                getDataFromApi();
+              }
+
+              if (localStorage.getItem('news-source') != config.source) {
+                console.log("news source is not the same with the config.source, getting data from api");
+                getDataFromApi();
+              }
+
+              insertDataToScope();
+
+            }else{
+
+              getDataFromApi();
+
+
+            }
+
+          }
+
+        } // end of the checkIfNewsDataExpired function
 
         
-        for(var i=0; i< $scope.TemplateData.length; i++){
-    		if($scope.TemplateData[i].Template == 'temp10'){
+    // checkIfNewsDataExpired();
+
+    for(var i=0; i< $scope.TemplateData.length; i++){
+    		if($scope.TemplateData[i].Template == 'temp17'){
     			localData = $scope.TemplateData[i].TempData;
-          newsSource = $scope.TemplateData[i].source;
     			insertDataToScope();
     		}
     	}
 
+        
+
+      // this function  will get data from the api if the json file is not yet saved in the local storage
+      function getDataFromApi() {
+
+          console.log("fetch data from news api");
+
+
+          $http.get(config.url)
+              .then(function(response) {
+
+                  var currentDate = moment().format('MM-DD-YYYY');
+
+                  if (response.data) {
+                      localStorage.setItem('news-expiration-date',currentDate);
+                      localStorage.setItem('news',JSON.stringify(response.data));
+                      localStorage.setItem('news-position',0);
+                      localStorage.setItem('news-source',config.source);
+                      console.log("fetch data from the local storage");
+                      //location.reload();
+                      insertDataToScope();
+                  } else {
+                      console.log("nothing returned");
+                  }
+              })
+              .catch(function() {
+                  // handle error
+                  console.log('error occurred');
+
+                  if (localStorage.getItem('news') != null && localStorage.getItem('news') != '') {
+                    console.log("fetch data from the local storage");
+                    insertDataToScope();
+                  }else{
+
+                  	if (cb == false) {
+                  		callback();	
+                  	}
+                                        
+                    // $(".news-loader").fadeIn("slow");
+                  }
+              })
+
+      }
 
           //insert all the data to the angular $scope
       function insertDataToScope() {
-          console.log('temp 10 data insert');
+          
           $(".news-loader").fadeOut("slow",function(){
   
-              // var x = localStorage.getItem('news');
-              var x = localData;
-              // var parsedData = JSON.parse(x);
+              var x = localStorage.getItem('news');
+              var parsedData = JSON.parse(x);
+
               var parsedData = localData;
 
-              // //check if data is empty
-              // if (parsedData == '') {
-              //   getDataFromApi();
-              // }
+              //check if data is empty
+              if (parsedData == '') {
+                getDataFromApi();
+              }
 
               var newsList = parsedData.articles;
               var currentPosition = parseInt(localStorage.getItem("news-position")) || 0;
@@ -118,26 +181,16 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
                     'article1': article1,
                     'article2':article2,
                     'article3':article3,
-                    'sourceIcon': config.image[newsSource]
+                    'sourceIcon': config.image[config.source]
                 }
               
               $scope.$apply();
               changeNews(currentPosition,newsCount);
 
-              if(title.length > 50) {
-                  $(".news-headline h1").css("font-size","1.2em");
-              }else {
-                $(".news-headline h1").css("font-size","1.5em");
-              }
-
-              if (description.length > 200) {
-                  $(".news-upper").css("margin-top","3em")
-              }else {
-                  $(".news-upper").css("margin-top","4em")
-              }
-
               if (loopCounter == 0) {
               	newsloop();
+              	cb = true;
+              	callCallback();
               	loopCounter++;
               }
 
@@ -150,11 +203,11 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
         if(config.loopNews){
             
-                interval1 = setInterval(function () {
+                interval13 = setInterval(function () {
                     removeNewsClass();
                 }, config.loopInterval/2);
             
-                interval2 = setInterval(function () {
+                interval14 = setInterval(function () {
                   
                     insertDataToScope();
                     addNewsClass();
@@ -170,23 +223,23 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
     function removeNewsClass(){
 
-		$(".news .header").delay(2000).removeClass("fadeInLeft");
-        $(".news .news").delay(2000).removeClass("news-animation");
-        $(".news .news-aside-div").delay(2000).removeClass("fadeInRight");
-        $(".news .divider-bottom").delay(2000).removeClass("fadeInUp");
-        $(".news .news-item").delay(2000).removeClass("fadeInRight");
-        $(".news .news-source-div").delay(2000).removeClass("fadeInDown");
+		$(".news-portrait .header").delay(2000).removeClass("fadeInLeft");
+        $(".news-portrait .news").delay(2000).removeClass("news-animation");
+        $(".news-portrait .news-aside-div").delay(2000).removeClass("fadeInRight");
+        $(".news-portrait .divider-bottom").delay(2000).removeClass("fadeInUp");
+        $(".news-portrait .news-item").delay(2000).removeClass("fadeInRight");
+        $(".news-portrait .news-source-div").delay(2000).removeClass("fadeInDown");
     
     }
 
     function addNewsClass(){
 
-        $(".news .header").addClass("fadeInLeft");
-        $(".news .news").addClass("news-animation");
-        $(".news .news-aside-div").addClass("fadeInRight");
-        $(".news .divider-bottom").addClass("fadeInUp");
-        $(".news .news-item").addClass("fadeInRight");
-        $(".news .news-source-div").addClass("fadeInDown");
+        $(".news-portrait .header").addClass("fadeInLeft");
+        $(".news-portrait .news").addClass("news-animation");
+        $(".news-portrait .news-aside-div").addClass("fadeInRight");
+        $(".news-portrait .divider-bottom").addClass("fadeInUp");
+        $(".news-portrait .news-item").addClass("fadeInRight");
+        $(".news-portrait .news-source-div").addClass("fadeInDown");
 
     }      
         
@@ -229,15 +282,18 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
 	function removeInterval() {
 
-		if (interval1 != undefined && interval2 != undefined) {
-			clearInterval(interval1);
-			clearInterval(interval2);		
-		} 
+		clearInterval(interval13);
+		clearInterval(interval14);		
 
 		
 	}
 
-    $timeout(removeInterval, 37000);      
-	$timeout(callback, 39000);
+	function callCallback() {
 
+		if (cb) {
+			$timeout(removeInterval, 37000);      
+			$timeout(callback, 39000);	
+		}
+		
+	}
 }

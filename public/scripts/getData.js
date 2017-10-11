@@ -5,14 +5,30 @@ function temp10GetData($http, $scope){
 		if(item.Template=='temp10'&&(!item.hasData||item.lastQuery < (Date.now()-600000))){
 			console.log('news query');
 
-			$http.get('https://newsapi.org/v1/articles?source=cnn&sortBy=top&apiKey=44e7bd68b7d74cef902f1d9c7cb96b72')
+			console.log(item);
+			var dum = item.tempSrc.source.split('/');
+			console.log(dum);
+			var source = dum[1];
+			item.source = source;
+			// for(var i=0; i< $scope.templates.length; i++){
+			// 	console.log()
+			// 	if($scope.templates[i].Template == 'temp10'){
+			// 		console.log('NEWWWS');
+			// 		var dum = $scope.templates[i].tempSrc.source.split('/');
+			// 		source = dum[1];
+			// 		console.log('source: '+source);
+			// 	}
+			// }
+
+			$http.get('https://newsapi.org/v1/articles?source='+source+'&sortBy=top&apiKey=44e7bd68b7d74cef902f1d9c7cb96b72')
 				.then(function(response){
 					console.log('temp 10 success');
 					for(var i=0; i<$scope.TemplateData.length; i++){
-		        		if($scope.TemplateData[i].Template == 'temp10'){
+		        		if($scope.TemplateData[i].Template == 'temp10' && $scope.TemplateData[i].CampaignID == item.CampaignID){
 		        			$scope.TemplateData[i].TempData = response.data;
 		        			$scope.TemplateData[i].hasData = true;
 		        			$scope.TemplateData[i].lastQuery = Date.now();
+		        			// $scope.TemplateData[i].source = source;
 		        			console.log('Get Data Temp Data');
 		        			console.log($scope.TemplateData);
 		        			break;

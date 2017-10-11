@@ -1,8 +1,5 @@
-// console.log('fuck temp 1');
 function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
-		
-		// console.log('temp1 controller');
-
+	
 	var widthMultiplier = 0.75;
 	var heightMultiplier = 0.75;
 	$scope.temp1VideoStyle = {
@@ -84,5 +81,3 @@ function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
 
 	temp1VideoPlay();
 }
-
-
