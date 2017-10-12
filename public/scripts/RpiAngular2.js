@@ -460,9 +460,8 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   function getTempData(){
     var payl = [$http, $scope];
 
-    //landscape-content
-
-    //news-landscape-cnn
+    // landscape-content
+    // news-landscape-cnn
     window['temp10GetData'].apply(null, payl);
     //nearby-restaurant-landscape
     window['temp11GetData'].apply(null, payl);

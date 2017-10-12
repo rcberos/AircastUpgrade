@@ -47,7 +47,7 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
     }        
         function insertDataToScope() {
             
-             $scope.hugotText = hugotList[makeUniqueRandom()];
+             $scope.hugotText = decode_utf8(hugotList[makeUniqueRandom()]);
              $scope.hugotBackground  = bgList[Math.floor(Math.random() * bgList.length)];
 
               // $scope.hugotText = hugotList[0];
@@ -66,6 +66,10 @@ function temp15Controller($scope, $window, $timeout, $http, tempSrc, callback){
              
 
              
+        }
+
+        function decode_utf8(s) {
+            return s.replace(/\\/g, '');
         }
 
         function hugotloop(){
