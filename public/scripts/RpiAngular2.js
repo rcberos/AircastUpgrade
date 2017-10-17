@@ -273,13 +273,13 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
       '$window': $window,
       '$timeout': $timeout,
       '$http': $http,
-      'source': playingTemplate.tempSrc,
+      'source': playingTemplate,
       "callback": $scope.templateShuffle,
       '$q': $q
     };
 
     var payl2 = [tempNameSpace['$scope'], tempNameSpace['$window'], tempNameSpace['$timeout'], tempNameSpace['$http'], tempNameSpace['source'], tempNameSpace['callback'], tempNameSpace['$q']];
-    var payl = [$scope, $window, $timeout, $http, playingTemplate.tempSrc, $scope.templateShuffle];
+    // var payl = [$scope, $window, $timeout, $http, playingTemplate.tempSrc, $scope.templateShuffle];
 
     // window[playingTemplate.tempInit].apply(null, payl2);
 

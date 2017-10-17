@@ -45,10 +45,10 @@ function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
 
 	$scope.temp1Src = {
 		// video: temp1Src.video,
-		side1: temp1Src.side1,
-		side2: temp1Src.side2,
-		side3: temp1Src.side3,
-		bottom: temp1Src.bottom
+		side1: temp1Src.tempSrc.side1,
+		side2: temp1Src.tempSrc.side2,
+		side3: temp1Src.tempSrc.side3,
+		bottom: temp1Src.tempSrc.bottom
 	}
 
  	var vidCtr = 0;
@@ -63,7 +63,7 @@ function temp1Controller($scope, $window, $timeout, $http, temp1Src, callback){
 		vidCtr++;
 
 		var vidElem = document.getElementById('temp1Video');
-		vidElem.src = temp1Src.video;
+		vidElem.src = temp1Src.tempSrc.video;
 
 		vidElem.play();
 

@@ -7,6 +7,7 @@ var aircast = require('./aircastServer.js')
 
 var Twit = require('twit');
 
+console.log(' ASDASD ASDASD ');
 
 var app = express()
 
@@ -135,6 +136,7 @@ function getRpiConfig(){
     console.log('success');
     // updateRpi();
     setInterval(aircast.getRpiFiles, 10000);
+    setInterval(aircast.getSourceFileUpdates, 10000);
   }
   else{
     console.log('fail');

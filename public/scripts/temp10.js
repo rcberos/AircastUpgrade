@@ -55,7 +55,7 @@ function temp10Controller($scope, $window, $timeout, $http, tempSrc, callback){
 
         
         for(var i=0; i< $scope.TemplateData.length; i++){
-    		if($scope.TemplateData[i].Template == 'temp10'){
+    		if($scope.TemplateData[i].Template == 'temp10' && $scope.TemplateData[i].CampaignID == tempSrc.CampaignID){
     			localData = $scope.TemplateData[i].TempData;
           newsSource = $scope.TemplateData[i].source;
     			insertDataToScope();
