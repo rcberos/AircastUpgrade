@@ -137,6 +137,7 @@ function getRpiConfig(){
     // updateRpi();
     setInterval(aircast.getRpiFiles, 10000);
     setInterval(aircast.getSourceFileUpdates, 10000);
+    setInterval(aircast.nodeAlive, 5000);
   }
   else{
     console.log('fail');

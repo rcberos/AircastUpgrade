@@ -17,14 +17,12 @@ var RpiConfig = {
 	RpiTempDownloading: []
 }
 
-// var configLocation = '/Users/randyberos/Documents/nodejs/AircastConfig/config.json';
 
 var configLocation = path.join(__dirname, '../AircastConfig/config.json');
 
 var getConfig = function(){
 	var AircastConfig = require(configLocation);
 
-	// console.log("RpiID: "+AircastConfig.RpiID);
 
 	RpiConfig.RpiID = AircastConfig.RpiID;
 	RpiConfig.RpiServer = AircastConfig.RpiServer;
@@ -143,7 +141,7 @@ var getRpiFiles = function(){
 					// console.log(index);
 					download(d.CampaignID, file, callback);
 				}, function(err){
-					console.log(err);
+					// console.log(err);
 					if(!err){
 						console.log('CampaignID: '+d.CampaignID+' FULL DOWNLOADED');
 						update(d.CampaignID);
@@ -171,7 +169,7 @@ function downloadTemplate(ARTID, file, cb){
 	console.log('Downloading ARTID: '+ARTID+' FileID: '+file.FileName);
 
 	var dest = path.join(__dirname+'/'+file.NodeLocation+'/');
-	var source = 'http://s3-ap-southeast-1.amazonaws.com/rpitv/'+file.S3Location+'/'+file.FileName;
+	var source = 'http://s3-ap-southeast-1.amazonaws.com/rpitv/'+file.S3Location+'/'+file.S3FileName;
 
 	// console.log(source);
 	// console.log(dest);
@@ -237,7 +235,7 @@ var getSourceFileUpdates = function(){
 
 			var data = resp.body.value;
 			for(var i = 0; i < data.length; i++){
-				console.log(data);
+				// console.log(data);
 				var isDownloading = false;
 				for(var j = 0; j < RpiConfig.RpiTempDownloading.length; j++){
 					if(data[i].ARTID == RpiConfig.RpiTempDownloading[j].ARTID){
@@ -263,7 +261,7 @@ var getSourceFileUpdates = function(){
 					async.each(d.Files, function(file, callback) {
 						downloadTemplate(d.ARTID, file, callback);
 					}, function(err){
-						console.log(err);
+						// console.log(err);
 						if(!err){
 							console.log('ART: '+d.ARTID+' FULL DOWNLOADED');
 							updateTemplate(d.ARTID);
@@ -289,11 +287,27 @@ var getSourceFileUpdates = function(){
 
 
 
+var nodeAlive = function(){
+	var opt = {
+	   headers: { 'Content-Type': 'application/json' }
+	  }
+	var data = {
+	    RpiID: RpiConfig.RpiID
+	  }
+
+	needle.post(RpiConfig.RpiServer+'rpiLastNodeAlive', data, opt, function(err, resp) {
+		console.log('done');
+	})
+}
+
+
+
 
 
 module.exports = {
 	config: RpiConfig,
 	getConfig: getConfig,
 	getRpiFiles: getRpiFiles,
-	getSourceFileUpdates: getSourceFileUpdates
+	getSourceFileUpdates: getSourceFileUpdates,
+	nodeAlive: nodeAlive
 };
