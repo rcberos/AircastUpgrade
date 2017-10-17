@@ -9,6 +9,17 @@ var Twit = require('twit');
 
 console.log(' ASDASD ASDASD ');
 
+
+// const testFolder = path.join(__dirname, '/Aircast');
+// // const fs = require('fs');
+
+// fs.readdir(testFolder, (err, files) => {
+//   files.forEach(file => {
+//     console.log(file);
+//   });
+// })
+
+
 var app = express()
 
 app.set('port', process.env.PORT || 3000);
@@ -136,8 +147,9 @@ function getRpiConfig(){
     console.log('success');
     // updateRpi();
     setInterval(aircast.getRpiFiles, 10000);
-    setInterval(aircast.getSourceFileUpdates, 10000);
-    setInterval(aircast.nodeAlive, 5000);
+    setInterval(aircast.getSourceFileUpdates, 30000);
+    setInterval(aircast.nodeAlive, 30000);
+    setInterval(aircast.removeFile, 5000);
   }
   else{
     console.log('fail');

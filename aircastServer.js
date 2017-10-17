@@ -301,6 +301,68 @@ var nodeAlive = function(){
 }
 
 
+var removeFile = function(){
+	var opt = {
+	   headers: { 'Content-Type': 'application/json' }
+	  }
+	var data = {
+	    RpiID: RpiConfig.RpiID
+	  }
+
+	needle.post(RpiConfig.RpiServer+'rpiCheckRemoveFile', data, opt, function(err, resp) {
+		if(!err){
+			// console.log(resp.body);
+			var data = resp.body.value;
+
+			data.forEach(function(d){
+				console.log(d.NodeLocation);
+				var dest = path.join(__dirname+'/'+d.NodeLocation+'/'+d.FileName);
+				// console.log(dest);
+				fs.unlink(dest, function(err) {
+				    if(err && err.code == 'ENOENT') {
+				        // file doens't exist
+				        console.info("File doesn't exist, won't remove it.");
+
+				        var opt = {
+						   headers: { 'Content-Type': 'application/json' }
+						  }
+						var data = {
+						    RpiID: RpiConfig.RpiID,
+						    ARRFID: d.ARRFID
+						  }
+
+						needle.post(RpiConfig.RpiServer+'rpiUpdateRemoveFile', data, opt, function(err, resp) {
+							if(!err){
+								console.log('ARRFID: '+d.ARRFID+' removed')
+							}
+						})
+
+				    } else if (err) {
+				        // other errors, e.g. maybe we don't have enough permission
+				        console.error("Error occurred while trying to remove file");
+				    } else {
+				        
+				    	var opt = {
+						   headers: { 'Content-Type': 'application/json' }
+						  }
+						var data = {
+						    RpiID: RpiConfig.RpiID,
+						    ARRFID: d.ARRFID
+						  }
+
+						needle.post(RpiConfig.RpiServer+'rpiUpdateRemoveFile', data, opt, function(err, resp) {
+							if(!err){
+								console.log('ARRFID: '+d.ARRFID+' removed')
+							}
+						})
+
+				    }
+				});
+			})
+		}
+	})
+}
+
 
 
 
@@ -309,5 +371,6 @@ module.exports = {
 	getConfig: getConfig,
 	getRpiFiles: getRpiFiles,
 	getSourceFileUpdates: getSourceFileUpdates,
-	nodeAlive: nodeAlive
+	nodeAlive: nodeAlive,
+	removeFile: removeFile
 };

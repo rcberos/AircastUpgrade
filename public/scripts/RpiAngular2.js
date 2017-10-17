@@ -28,6 +28,7 @@ app.filter('cut', function () {
 
 
 app.controller('MainController', function($scope, $http, $interval, $timeout, $window, $q){
+  reloader = 1;
   // $window.alert('W: '+$window.innerWidth+' H: '+$window.innerHeight);
 
   $scope.demoState = 0;
@@ -70,158 +71,6 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
   $scope.templates.push(payload);
 
-
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp6.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp6.js',
-  //   tempInit: 'temp6Controller'
-  // }
-
-  // $scope.templates.push(payload);
-
-
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp20.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp1.js',
-  //   tempInit: 'temp20Controller'
-  // }
-
-
-  // $scope.templates.push(payload);
-
-
-
-
-
-  //news
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp10.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp1.js',
-  //   tempInit: 'temp10Controller'
-  // }
-
-
-  // $scope.templates.push(payload);
-
-
-  //nearby-restaurant
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp11.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp1.js',
-  //   tempInit: 'temp11Controller'
-  // }
-
-
-  // $scope.templates.push(payload);
-
-  // //weather
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp12.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp1.js',
-  //   tempInit: 'temp12Controller'
-  // }
-
-
-  // $scope.templates.push(payload);
-
-
-  // //currency
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp13.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp1.js',
-  //   tempInit: 'temp13Controller'
-  // }
-
-
-  // $scope.templates.push(payload);
-
-  // //twitter
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp14.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp1.js',
-  //   tempInit: 'temp14Controller'
-  // }
-
-
-  // $scope.templates.push(payload);
-
-  // //hugot
-  // var payload = {
-  //   CampaignID: 2,
-  //   tempHtml: 'templates/temp15.html',
-  //   tempSrc: {
-  //               video: "assets/audition.mp4",
-  //               side1: "assets/side1.jpg",
-  //               side2: "assets/side1.jpg",
-  //               side3: "assets/side1.jpg",
-  //               bottom: "assets/bottom.jpg",
-  //             },
-  //   tempJs: 'scripts/temp1.js',
-  //   tempInit: 'temp15Controller'
-  // }
-
-
-  // $scope.templates.push(payload);
-
-
-
-
   
 
   $scope.currentCampaignID = 0;
@@ -233,20 +82,6 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
 
 
     if($scope.templates.length == 0){
-        // var payload = {
-        //   CampaignID: 2,
-        //   tempHtml: 'templates/temp1.html',
-        //   tempSrc: {
-        //               video: "assets/audition.mp4",
-        //               side1: "assets/side1.jpg",
-        //               side2: "assets/side1.jpg",
-        //               side3: "assets/side1.jpg",
-        //               bottom: "assets/bottom.jpg",
-        //             },
-        //   tempJs: 'scripts/temp1.js',
-        //   tempCss: 'css/temp1.css',
-        //   tempInit: 'temp1Controller'
-        // }
 
         $scope.templates.push($scope.Default);
     }
