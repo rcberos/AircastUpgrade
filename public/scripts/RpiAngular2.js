@@ -53,18 +53,14 @@ app.controller('MainController', function($scope, $http, $interval, $timeout, $w
   $scope.templates = [];
 
   var payload = {
-    CampaignID: 2,
-    tempHtml: 'templates/temp1.html',
+    CampaignID: 3,
+    tempHtml: 'templates/temp2.html',
     tempSrc: {
-                video: "assets/audition.mp4",
-                side1: "assets/side1.jpg",
-                side2: "assets/side1.jpg",
-                side3: "assets/side1.jpg",
-                bottom: "assets/bottom.jpg",
+                video: "assets/loading.mp4"
               },
-    tempJs: 'scripts/temp1.js',
-    tempCss: 'css/temp1.css',
-    tempInit: 'temp1Controller'
+    tempJs: 'scripts/temp2.js',
+    tempCss: 'css/temp2.css',
+    tempInit: 'temp2Controller'
   }
 
   $scope.Default = payload;
